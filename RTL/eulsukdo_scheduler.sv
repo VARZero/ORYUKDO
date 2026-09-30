@@ -633,6 +633,17 @@ module eulsukdo_scheduler #(
                                    {STRUCT_DECODE_NEW_INST{lsq_nel_ready && recovery_ready}};
 
     assign recovery_admit = nel_ist_new_inst_valid & nel_ist_new_inst_get;
+    // Vivado 2020.2 does not synthesize $countones with a variable argument.
+    function automatic [RECOVERY_AGE_WIDTH-1:0] count_recovery_admit(
+        input [STRUCT_DECODE_NEW_INST-1:0] mask
+    );
+        integer bit_idx;
+        begin
+            count_recovery_admit = '0;
+            for (bit_idx = 0; bit_idx < STRUCT_DECODE_NEW_INST; bit_idx = bit_idx + 1)
+                if (mask[bit_idx]) count_recovery_admit = count_recovery_admit + 1'b1;
+        end
+    endfunction
     for (genvar mem_lane = 0; mem_lane < STRUCT_DECODE_NEW_INST; mem_lane++) begin : GEN_RECOVERY_MEMORY
         assign recovery_memory_admit[mem_lane] = ENABLE_MEMORY_ORDER &&
             nel_ist_new_inst_data[mem_lane*_BITWIDTH_INTERNAL_INST_WIDTH +
@@ -642,8 +653,8 @@ module eulsukdo_scheduler #(
     assign nel_ist_execution_valid = nel_ist_new_inst_valid &
         ~(nel_ist_new_inst_exception & {STRUCT_DECODE_NEW_INST{ENABLE_RECOVERY_TRACKING}});
     for (genvar age_lane = 0; age_lane < STRUCT_DECODE_NEW_INST; age_lane++) begin : GEN_RECOVERY_AGE
-        wire [RECOVERY_AGE_WIDTH-1:0] preceding = RECOVERY_AGE_WIDTH'($countones(recovery_admit &
-            ((STRUCT_DECODE_NEW_INST'(1) << age_lane)-1'b1)));
+        wire [RECOVERY_AGE_WIDTH-1:0] preceding = count_recovery_admit(recovery_admit &
+            ((STRUCT_DECODE_NEW_INST'(1) << age_lane)-1'b1));
         assign recovery_nel_age[age_lane*RECOVERY_AGE_WIDTH +: RECOVERY_AGE_WIDTH] =
             recovery_next_age + preceding;
         assign recovery_nel_keys[age_lane*_BITWIDTH_FLOW_WINDOWS_PC +: _BITWIDTH_FLOW_WINDOWS_PC] =
@@ -687,7 +698,7 @@ module eulsukdo_scheduler #(
     end
     always_ff @(posedge clk or negedge reset_n) begin
         if (!reset_n) recovery_next_age <= '0;
-        else recovery_next_age <= recovery_next_age + RECOVERY_AGE_WIDTH'($countones(recovery_admit));
+        else recovery_next_age <= recovery_next_age + count_recovery_admit(recovery_admit);
     end
 
     generate

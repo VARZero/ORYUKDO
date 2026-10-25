@@ -5,6 +5,11 @@
 기존 `eulsukdo_scheduler`는 비교용으로 보존하고 새 통합 최상위 모듈은
 `gen2/src/RTL/oryukdo_scheduler.sv`를 사용한다.
 
+LSQ는 기본적으로 기존 내장 구현을 유지한다. `CUSTOM_LSQ=1`이면
+`oryukdo_custom_lsq`라는 사용자 모듈로 교체한다. 시작용 RTL과 접수·완료·복구
+인터페이스는 [사용자 LSQ 연결 안내](docs/CUSTOM_LSQ.md)를 참고한다.
+기존 70 MHz 배치·배선 수치는 `844267f`의 측정값이며 새 옵션의 재측정값은 아니다.
+
 ## 구성
 
 | 모듈 | 역할 |

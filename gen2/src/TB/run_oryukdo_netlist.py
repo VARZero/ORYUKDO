@@ -20,6 +20,12 @@ if __name__ == '__main__':
     output = args.output.resolve() if args.output else build/'gate_sim'
     output.mkdir(exist_ok=True)
     bench = (ROOT/'src/TB/tb_oryukdo_scheduler.sv').read_text()
+    # This runner targets the built-in FPGA configuration. Custom RTL stall
+    # injection uses behavioral hierarchy that is absent from a flat netlist.
+    bench = bench.split('// Test-only user implementation;')[0]
+    bench = re.sub(r'    generate if\(CUSTOM_LSQ\) begin : CUSTOM_TEST.*?    end endgenerate',
+                   '', bench, flags=re.S)
+    bench = bench.replace('      CUSTOM_TEST.run();', '')
     bench = bench.replace('ARCH=16, PHY=32, DECODE=2, ENTRIES=32',
                           f'ARCH=32, PHY={manifest.get("phy",64)}, DECODE=2, ENTRIES={manifest["entries"]}')
     bench = bench.replace('RS_DEPTH=16', f'RS_DEPTH={manifest.get("rs_depth",128)}')

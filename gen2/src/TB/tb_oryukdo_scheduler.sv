@@ -9,6 +9,7 @@ module tb_oryukdo_scheduler #(
     parameter int ISSUE=EX_LANES, UPDATES=EX_LANES, RS_DEPTH=16,
     parameter int GEN_W=8, EPOCH_W=8,
     parameter bit EXTERNAL_PREDICTOR=0,
+    parameter bit CUSTOM_LSQ=0,
     localparam int SLOT_W=(ENTRIES>1)?$clog2(ENTRIES):1,
     localparam int TOKEN_W=SLOT_W+GEN_W,
     localparam int FLOW_W=(WINDOWS>1)?$clog2(WINDOWS):1,
@@ -103,7 +104,7 @@ module tb_oryukdo_scheduler #(
     oryukdo_scheduler #(.PC_W(PC_W),.DATA_W(DATA_W),.IMM_W(IMM_W),.UOP_W(UOP_W),
       .ARCH(ARCH),.PHY(PHY),.DECODE(DECODE),.ENTRIES(ENTRIES),.WINDOWS(WINDOWS),.WINDOW_SIZE(WINDOW_SIZE),
       .PATHS(PATHS),.EX_LANES(EX_LANES),.PATH_LANES(PATH_LANES),.ISSUE(ISSUE),.UPDATES(UPDATES),
-      .RS_DEPTH(RS_DEPTH),.GEN_W(GEN_W),.EPOCH_W(EPOCH_W),.EXTERNAL_PREDICTOR(EXTERNAL_PREDICTOR)) dut(.*);
+      .RS_DEPTH(RS_DEPTH),.GEN_W(GEN_W),.EPOCH_W(EPOCH_W),.EXTERNAL_PREDICTOR(EXTERNAL_PREDICTOR),.CUSTOM_LSQ(CUSTOM_LSQ)) dut(.*);
     always #5 clk=~clk;
     logic [TOKEN_W-1:0] tokens[1024];
     logic [PHY_W-1:0] prd[1024], prs1[1024], prs2[1024];
@@ -141,9 +142,8 @@ module tb_oryukdo_scheduler #(
     always @(posedge clk) begin
       if(reset_n) begin
         cycle_count++;
-        if(cycle_count>20000) $fatal(1,"global timeout pc=%h frontier=%d head=%d scan=%d count=%d memory=%d service=%d",
-          o_fetch_pc,dut.U_FRONTIER.state,dut.U_FRONTIER.head,dut.U_FRONTIER.scan,dut.U_FRONTIER.count,
-          dut.U_MEMORY.work_state,dut.U_MEMORY.service);
+        if(cycle_count>20000) $fatal(1,"global timeout pc=%h frontier=%d head=%d scan=%d count=%d",
+          o_fetch_pc,dut.U_FRONTIER.state,dut.U_FRONTIER.head,dut.U_FRONTIER.scan,dut.U_FRONTIER.count);
         for(int e=0;e<EX_LANES;e++) if(o_ex_valid[e] && i_ex_get[e]) begin
           int p;
           p=int'(o_ex_data[e*EX_W +: PC_W])/4;
@@ -286,7 +286,42 @@ module tb_oryukdo_scheduler #(
       end
       @(negedge clk);i_decode_valid='0;
     endtask
+    generate if(CUSTOM_LSQ) begin : CUSTOM_TEST
+      task automatic run;
+        // Stall a captured instruction, then prove partial-window retirement
+        // still progresses and late WBC readiness reaches the held consumer.
+        restart();send(0,0,0,0,0,0,1);wait_issue(0);
+        @(negedge clk);dut.GEN_CUSTOM_LSQ.U_LSQ.block_allocate=1;
+        send(4,0,0,0,0,1,2,1);complete(0,42);wait_retired(0);tick(8);
+        if(issued[1] || dut.frontier_count!=0) $fatal(1,"Custom allocation stall leaked");
+        @(negedge clk);dut.GEN_CUSTOM_LSQ.U_LSQ.block_allocate=0;
+        wait_issue(4);
+        if(registers[prs1[1]]!=42) $fatal(1,"WBC lost during custom LSQ stall");
+        complete(4,43);wait_retired(4);
+        // Backpressured AGU must keep valid visible to the user implementation.
+        restart();send(0,1,0,0,0,1,1);wait_issue(0);
+        @(negedge clk);dut.GEN_CUSTOM_LSQ.U_LSQ.block_agu=1;
+        i_agu_valid=1;i_agu_token=tokens[0];i_agu_address=32'h40;i_agu_mask='1;
+        tick(8);
+        if(o_agu_ready || loads || !dut.GEN_CUSTOM_LSQ.U_LSQ.i_agu_valid)
+          $fatal(1,"Custom AGU handshake lost valid or accepted early");
+        @(negedge clk);dut.GEN_CUSTOM_LSQ.U_LSQ.block_agu=0;
+        #1;if(!o_agu_ready) $fatal(1,"Custom AGU did not resume");
+        tick();@(negedge clk);i_agu_valid=0;wait_retired(0);
+        if(loads!=1) $fatal(1,"Custom AGU accepted duplicate request");
+        // Flush cancels an allocated branch and the still-unallocated bundle.
+        restart();send(0,0,0,1,0,1,0);wait_issue(0);
+        @(negedge clk);dut.GEN_CUSTOM_LSQ.U_LSQ.block_allocate=1;
+        send(4,1,1,0,0,1,0);complete(0,0,32'h80);wait_flush();
+        @(negedge clk);dut.GEN_CUSTOM_LSQ.U_LSQ.block_allocate=0;tick(20);
+        if(issued[1] || stores || loads) $fatal(1,"Flushed custom allocation escaped");
+        $display("custom LSQ allocation/AGU stalls, window drain, WBC and flush PASS");
+      endtask
+    end else begin : CUSTOM_TEST
+      task automatic run; endtask
+    end endgenerate
     initial begin
+      CUSTOM_TEST.run();
       // PC candidates are parallel, but admission must remain a contiguous
       // prefix: a missing first lane or an invalid/control lane cuts the suffix.
       if(DECODE>1) for(int mode=0;mode<2;mode++) begin
@@ -771,4 +806,110 @@ module tb_oryukdo_scheduler #(
       $display("nonzero boot PC and idle interrupt PASS");
       $display("tb_oryukdo_scheduler PASS");$finish;
     end
+endmodule
+
+// Test-only user implementation; never compile alongside the example template.
+module oryukdo_custom_lsq #(
+    parameter int DEPTH=128, LANES=2, ADDR_W=32, DATA_W=32, GEN_W=32, CAUSE_W=5,
+    localparam int SLOT_W=(DEPTH>1)?$clog2(DEPTH):1,
+    localparam int TOKEN_W=SLOT_W+GEN_W, BYTES=DATA_W/8
+) (
+    input wire clk, reset_n, i_flush,
+    // Preview only: no allocation side effects until i_allocate.
+    input wire [LANES-1:0] i_reserve,
+    output wire o_allocate_ready,
+    input wire [LANES-1:0] i_allocate, i_memory, i_store,
+    input wire [LANES*TOKEN_W-1:0] i_token,
+    input wire i_agu_valid,
+    output wire o_agu_ready,
+    input wire [TOKEN_W-1:0] i_agu_token,
+    input wire [ADDR_W-1:0] i_agu_address,
+    input wire [DATA_W-1:0] i_agu_data,
+    input wire [BYTES-1:0] i_agu_mask,
+    input wire i_agu_nonspec, i_agu_fault,
+    input wire [CAUSE_W-1:0] i_agu_cause,
+    output wire o_serial_valid,
+    output wire [TOKEN_W-1:0] o_serial_token,
+    input wire i_head_valid,
+    input wire [TOKEN_W-1:0] i_head_token,
+    input wire i_commit_valid, i_commit_store, i_retire,
+    input wire [TOKEN_W-1:0] i_commit_token,
+    output wire o_commit_ready,
+    output logic o_complete_valid,
+    input wire i_complete_accept,
+    output logic [TOKEN_W-1:0] o_complete_token,
+    output logic [DATA_W-1:0] o_complete_data,
+    output logic o_complete_fault,
+    output logic [CAUSE_W-1:0] o_complete_cause,
+    output wire o_request_valid,
+    input wire i_request_ready,
+    output wire o_request_store,
+    output wire [ADDR_W-1:0] o_request_address,
+    output wire [DATA_W-1:0] o_request_data,
+    output wire [BYTES-1:0] o_request_mask,
+    input wire i_response_valid,
+    output wire o_response_ready,
+    input wire [DATA_W-1:0] i_response_data,
+    input wire i_response_fault,
+    input wire [CAUSE_W-1:0] i_response_cause,
+    output logic o_store_fault,
+    output logic [TOKEN_W-1:0] o_store_fault_token,
+    output logic [CAUSE_W-1:0] o_store_fault_cause
+);
+    logic block_allocate=0, block_agu=0;
+    wire reference_agu_ready;
+    assign o_allocate_ready=!block_allocate;
+    assign o_agu_ready=reference_agu_ready && !block_agu;
+    always @(posedge clk) if(reset_n && !i_flush) begin
+        assert((i_allocate & ~i_reserve)=='0) else $fatal(1,"Allocation outside preview");
+        assert(o_allocate_ready || i_allocate=='0) else $fatal(1,"Allocation ignored custom backpressure");
+    end
+    oryukdo_memory #(.DEPTH(DEPTH),.LANES(LANES),.ADDR_W(ADDR_W),
+        .DATA_W(DATA_W),.GEN_W(GEN_W),.CAUSE_W(CAUSE_W)) U_REFERENCE (
+        .clk(clk),
+        .reset_n(reset_n),
+        .i_flush(i_flush),
+        .i_allocate(i_allocate),
+        .i_memory(i_memory),
+        .i_store(i_store),
+        .i_token(i_token),
+        .i_agu_valid(i_agu_valid && !block_agu),
+        .o_agu_ready(reference_agu_ready),
+        .i_agu_token(i_agu_token),
+        .i_agu_address(i_agu_address),
+        .i_agu_data(i_agu_data),
+        .i_agu_mask(i_agu_mask),
+        .i_agu_nonspec(i_agu_nonspec),
+        .i_agu_fault(i_agu_fault),
+        .i_agu_cause(i_agu_cause),
+        .o_serial_valid(o_serial_valid),
+        .o_serial_token(o_serial_token),
+        .i_head_valid(i_head_valid),
+        .i_head_token(i_head_token),
+        .i_commit_valid(i_commit_valid),
+        .i_commit_store(i_commit_store),
+        .i_retire(i_retire),
+        .i_commit_token(i_commit_token),
+        .o_commit_ready(o_commit_ready),
+        .o_complete_valid(o_complete_valid),
+        .i_complete_accept(i_complete_accept),
+        .o_complete_token(o_complete_token),
+        .o_complete_data(o_complete_data),
+        .o_complete_fault(o_complete_fault),
+        .o_complete_cause(o_complete_cause),
+        .o_request_valid(o_request_valid),
+        .i_request_ready(i_request_ready),
+        .o_request_store(o_request_store),
+        .o_request_address(o_request_address),
+        .o_request_data(o_request_data),
+        .o_request_mask(o_request_mask),
+        .i_response_valid(i_response_valid),
+        .o_response_ready(o_response_ready),
+        .i_response_data(i_response_data),
+        .i_response_fault(i_response_fault),
+        .i_response_cause(i_response_cause),
+        .o_store_fault(o_store_fault),
+        .o_store_fault_token(o_store_fault_token),
+        .o_store_fault_cause(o_store_fault_cause)
+    );
 endmodule

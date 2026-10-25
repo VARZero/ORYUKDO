@@ -10,6 +10,7 @@ module oryukdo_scheduler #(
     parameter int ISSUE=EX_LANES, UPDATES=EX_LANES, RS_DEPTH=128,
     parameter int GEN_W=32, EPOCH_W=32,
     parameter bit EXTERNAL_PREDICTOR=0,
+    parameter bit CUSTOM_LSQ=0,
     localparam int SLOT_W=(ENTRIES>1)?$clog2(ENTRIES):1,
     localparam int TOKEN_W=SLOT_W+GEN_W,
     localparam int FLOW_W=(WINDOWS>1)?$clog2(WINDOWS):1,
@@ -134,11 +135,12 @@ module oryukdo_scheduler #(
     wire prediction_ready;
     wire [PC_W-1:0] prediction_next;
     wire frontier_ready, rename_ready, initializing;
+    wire lsq_allocate_ready;
     wire [$clog2(ENTRIES+1)-1:0] frontier_count;
     // Seal a partial window on resource pressure, so its retirement can free
     // slots/registers without requiring the very admission it is blocking.
     wire seal_window=reset_n && !initializing && !o_flush && window_count!=0 &&
-        (((|selected) && !rename_ready) || int'(frontier_count)>ENTRIES-DECODE);
+        (((|selected) && (!rename_ready || !lsq_allocate_ready)) || int'(frontier_count)>ENTRIES-DECODE);
     wire [DECODE*TOKEN_W-1:0] allocated_tokens;
     wire [DECODE*PHY_W-1:0] rename_rd;
     wire [DECODE*2*PHY_W-1:0] rename_rs;
@@ -151,7 +153,7 @@ module oryukdo_scheduler #(
     wire frontier_stopped;
     wire [DECODE-1:0] allocate=selected & {DECODE{admit}};
     assign admit=reset_n && (|selected) && !o_flush && !csr_barrier && !fault_pending &&
-               !(|dispatch_valid) && frontier_ready && rename_ready &&
+               !(|dispatch_valid) && frontier_ready && rename_ready && lsq_allocate_ready &&
                (&prm_alloc_valid) && decoded.epoch==epoch;
     // No combinational bypass/refill: capture cannot reach token allocation.
     assign capture_ready=reset_n && !boot_pending && !initializing && !o_flush &&
@@ -374,8 +376,9 @@ module oryukdo_scheduler #(
         for(int bank=0;bank<BANKS;bank++) if(o_wb_valid[bank])
             wake_phy[bank*PHY_W +: PHY_W]<=o_wb_phy[bank*PHY_W +: PHY_W];
     end
-    assign o_agu_ready=mem_agu_ready && meta_live(i_agu_token) && metadata[i_agu_token[SLOT_W-1:0]].issued &&
+    wire agu_eligible=reset_n && !o_flush && meta_live(i_agu_token) && metadata[i_agu_token[SLOT_W-1:0]].issued &&
         !metadata[i_agu_token[SLOT_W-1:0]].queued;
+    assign o_agu_ready=mem_agu_ready && agu_eligible;
     assign o_exception_pending=frontier_stopped || fault_pending;
     always_ff @(posedge clk or negedge reset_n) begin
         if(!reset_n) fault_pending<=0;
@@ -468,6 +471,24 @@ module oryukdo_scheduler #(
         .i_interrupt(i_interrupt),.i_trap_vector(i_trap_vector),.i_reset_pc(i_reset_pc),
         .o_flush(o_flush),.o_trap(o_trap),.o_trap_interrupt(o_trap_interrupt),.o_redirect_pc(o_redirect_pc),
         .o_trap_pc(o_trap_pc),.o_trap_cause(o_trap_cause),.o_boundary(o_window_boundary),.o_stopped(frontier_stopped),.o_count(frontier_count));
+    generate if (CUSTOM_LSQ) begin : GEN_CUSTOM_LSQ
+    oryukdo_custom_lsq #(.DEPTH(ENTRIES),.LANES(DECODE),.ADDR_W(PC_W),.DATA_W(DATA_W),.GEN_W(GEN_W)) U_LSQ (
+        .i_reserve(selected),.o_allocate_ready(lsq_allocate_ready),
+        .clk(clk),.reset_n(reset_n),.i_flush(o_flush),.i_allocate(allocate),.i_memory(decoded.memory_op),
+        .i_store(decoded.store),.i_token(allocated_tokens),.i_agu_valid(i_agu_valid && agu_eligible),.o_agu_ready(mem_agu_ready),
+        .i_agu_token(i_agu_token),.i_agu_address(i_agu_address),.i_agu_data(i_agu_data),.i_agu_mask(i_agu_mask),
+        .i_agu_nonspec(i_agu_nonspec),.i_agu_fault(i_agu_fault),.i_agu_cause(i_agu_cause),
+        .o_serial_valid(serial_valid),.o_serial_token(serial_token),.i_head_valid(head_valid),.i_head_token(head_token),
+        .i_commit_valid(commit_valid),.i_commit_store(commit_store),.i_retire(o_retire),.i_commit_token(commit_token),
+        .o_commit_ready(commit_ready),.o_complete_valid(mem_done_valid),.i_complete_accept(mem_completion_discard || queue_ready[EX_LANES]),
+        .o_complete_token(mem_done_token),.o_complete_data(mem_done_data),.o_complete_fault(mem_done_fault),.o_complete_cause(mem_done_cause),
+        .o_request_valid(o_mem_valid),.i_request_ready(i_mem_ready),.o_request_store(o_mem_store),
+        .o_request_address(o_mem_address),.o_request_data(o_mem_data),.o_request_mask(o_mem_mask),
+        .i_response_valid(i_mem_response_valid),.o_response_ready(o_mem_response_ready),.i_response_data(i_mem_response_data),
+        .i_response_fault(i_mem_response_fault),.i_response_cause(i_mem_response_cause),
+        .o_store_fault(store_fault),.o_store_fault_token(store_fault_token),.o_store_fault_cause(store_fault_cause));
+    end else begin : GEN_BUILTIN_LSQ
+        assign lsq_allocate_ready=1'b1;
     oryukdo_memory #(.DEPTH(ENTRIES),.LANES(DECODE),.ADDR_W(PC_W),.DATA_W(DATA_W),.GEN_W(GEN_W)) U_MEMORY (
         .clk(clk),.reset_n(reset_n),.i_flush(o_flush),.i_allocate(allocate),.i_memory(decoded.memory_op),
         .i_store(decoded.store),.i_token(allocated_tokens),.i_agu_valid(i_agu_valid && o_agu_ready),.o_agu_ready(mem_agu_ready),
@@ -482,6 +503,7 @@ module oryukdo_scheduler #(
         .i_response_valid(i_mem_response_valid),.o_response_ready(o_mem_response_ready),.i_response_data(i_mem_response_data),
         .i_response_fault(i_mem_response_fault),.i_response_cause(i_mem_response_cause),
         .o_store_fault(store_fault),.o_store_fault_token(store_fault_token),.o_store_fault_cause(store_fault_cause));
+    end endgenerate
     // Backend instances are generated below with a common opaque extended PC
     // field: {generation, slot, actual PC}. IST/PRM/RS never interpret that field.
 

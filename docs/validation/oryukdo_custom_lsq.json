@@ -1,0 +1,223 @@
+{
+  "feature": "Optional user LSQ RTL replacement; built-in default preserved",
+  "date": "2026-10-25",
+  "command": "python3 gen2/src/TB/run_oryukdo.py --output gen2/build/oryukdo_custom_lsq_full --jobs 2",
+  "results": [
+    {
+      "name": "tb_oryukdo_scheduler__",
+      "parameters": {},
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_scheduler__CUSTOM_LSQ-1",
+      "parameters": {
+        "CUSTOM_LSQ": 1
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_scheduler__CUSTOM_LSQ-1_EXTERNAL_PREDICTOR-1",
+      "parameters": {
+        "CUSTOM_LSQ": 1,
+        "EXTERNAL_PREDICTOR": 1
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_scheduler__EXTERNAL_PREDICTOR-1",
+      "parameters": {
+        "EXTERNAL_PREDICTOR": 1
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_scheduler__DECODE-1_EX_LANES-3_ENTRIES-17_PHY-18_UPDATES-2",
+      "parameters": {
+        "DECODE": 1,
+        "EX_LANES": 3,
+        "ENTRIES": 17,
+        "PHY": 18,
+        "UPDATES": 2
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_scheduler__DECODE-3_EX_LANES-7_ENTRIES-32_UPDATES-3",
+      "parameters": {
+        "DECODE": 3,
+        "EX_LANES": 7,
+        "ENTRIES": 32,
+        "UPDATES": 3
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_scheduler__DECODE-1_ENTRIES-17_PHY-18_WINDOW_SIZE-64",
+      "parameters": {
+        "DECODE": 1,
+        "ENTRIES": 17,
+        "PHY": 18,
+        "WINDOW_SIZE": 64
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_scheduler__ENTRIES-128_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+      "parameters": {
+        "ENTRIES": 128,
+        "PHY": 64,
+        "ARCH": 32,
+        "GEN_W": 32,
+        "EPOCH_W": 32,
+        "RS_DEPTH": 128
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_scheduler__ENTRIES-64_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+      "parameters": {
+        "ENTRIES": 64,
+        "PHY": 64,
+        "ARCH": 32,
+        "GEN_W": 32,
+        "EPOCH_W": 32,
+        "RS_DEPTH": 128
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_scheduler__ENTRIES-32_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+      "parameters": {
+        "ENTRIES": 32,
+        "PHY": 64,
+        "ARCH": 32,
+        "GEN_W": 32,
+        "EPOCH_W": 32,
+        "RS_DEPTH": 128
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_completion_queue__",
+      "parameters": {},
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_completion_queue__LANES-3_DEPTH-3",
+      "parameters": {
+        "LANES": 3,
+        "DEPTH": 3
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_nel__",
+      "parameters": {},
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_result_selector__",
+      "parameters": {},
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_result_selector__LANES-3",
+      "parameters": {
+        "LANES": 3
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_result_selector__LANES-7",
+      "parameters": {
+        "LANES": 7
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_prm_reservation__",
+      "parameters": {},
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_prm_reservation__DECODE-3_DEPTH-2_ROW_DEPTH-3",
+      "parameters": {
+        "DECODE": 3,
+        "DEPTH": 2,
+        "ROW_DEPTH": 3
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "tb_oryukdo_prm_reservation__DECODE-1_ROW_DEPTH-2",
+      "parameters": {
+        "DECODE": 1,
+        "ROW_DEPTH": 2
+      },
+      "passed": true,
+      "build_exit": 0,
+      "run_exit": 0
+    }
+  ],
+  "source_hashes": {
+    "src/RTL/eulsukdo_scheduler.sv": "333f20659a0ae18bf7f22318e288b0729fc8089b01fa28db4b35b84686dcbdad",
+    "src/RTL/flow_control_logic.sv": "8bc64d4778f86e270172a5777723830b58932e171d40ec4c9ad236ac465715c6",
+    "src/RTL/instruction_state_table.sv": "3362962bcd15bd66431baafafef0f48bec3f8be552c65902b832e75028f7569e",
+    "src/RTL/load_store_queue.sv": "36c378c4ab4d6b86d91b699fade7975fa022a5d5e5ca3b580083d4f530dedc2b",
+    "src/RTL/new_entry_logic.sv": "bab7518424804500c5c9d42fca1802fed3f602f7ba690dd9084c309917e33193",
+    "src/RTL/oryukdo_completion_queue.sv": "813f525c93282d739998cd61e5d7bbeb15cb8b63c7082731a0b8dc06449fcfa9",
+    "src/RTL/oryukdo_dependency_mapper.sv": "c9a2c5c06f1f98e7d0e8dbae9ed2dae110a1f198c1a3bcf1c7f898f1e3b4d14f",
+    "src/RTL/oryukdo_frontier.sv": "82c3b9f0cb68a2b7f8707e87de934b910e04e87b1d0717836c521c035f44849a",
+    "src/RTL/oryukdo_memory.sv": "ecbc02825c2d1950b0d309af32eaf06999241c9c4f0efdd94a3ab1b4d1cc3fb0",
+    "src/RTL/oryukdo_new_entry_logic.sv": "304683edc265b55bda9097eb8818d10b6fd433fb97e70b905abcd36bbc46263f",
+    "src/RTL/oryukdo_rename.sv": "71e38ce191daa08977c4502af67d0edb2233edbc5b356caed2837ca75fe1a116",
+    "src/RTL/oryukdo_result_selector.sv": "54e485819bfaa985693e9ef94ea13b22c20ad8c8d60cc4c604c90705f151be2d",
+    "src/RTL/oryukdo_scheduler.sv": "a53cb083870839990a30f919844b939ee424d9797a2bddd32d99a9b11e958d8a",
+    "src/RTL/physical_register_mapper.sv": "05f8efbe29c7378fbb6d5e25c6ed6e425d3d5aeba9dbb0cc85c733fa77b41d06",
+    "src/RTL/ready_station.sv": "d33c25b208cdcc0f24d91e951ac51608d30e81b0c305c3fc9e0cdc73915ab059",
+    "src/RTL/write_back_concatenation.sv": "9a62e2fdcdd6723a241d5d7e1264be3053427fbf47efa18dc878f6cd6fb41b68",
+    "src/RTL/_element_logics.sv": "b330cb3f3af0bc1e0650f40ea11b5d407378718bc6a945f669c1228f1fa8df6d",
+    "src/TB/tb_oryukdo_completion_queue.sv": "001baf4133e9718dad659cfd3f253eb86e669576f5b2eac75a71844f3100a8f2",
+    "src/TB/tb_oryukdo_nel.sv": "027dd95f39a65f1878f34e7834c19773ae76f49af61fe24cbc84938b66a14fd1",
+    "src/TB/tb_oryukdo_prm_reservation.sv": "3fabc854c01af25a7d3cd6999cc7cf2d0a22d050f4b54dda84362d0dae3f0676",
+    "src/TB/tb_oryukdo_result_selector.sv": "fbbaf68745901704fddea061789bf3cdf442f18c575ea0c30654813ed19f7bf5",
+    "src/TB/tb_oryukdo_scheduler.sv": "4f4c2ddd64f7c9315bd665a590969a1150f330f11a8eca83f489eb62de13618d"
+  },
+  "timing": "No new synthesis/place/route. Historical 70 MHz result is for commit 844267f."
+}

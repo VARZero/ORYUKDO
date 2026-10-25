@@ -9,6 +9,8 @@ from run_prm_pipeline import ROOT, run
 
 CASES = [
     ('tb_oryukdo_scheduler', {}),
+    ('tb_oryukdo_scheduler', dict(CUSTOM_LSQ=1)),
+    ('tb_oryukdo_scheduler', dict(CUSTOM_LSQ=1, EXTERNAL_PREDICTOR=1)),
     ('tb_oryukdo_scheduler', dict(EXTERNAL_PREDICTOR=1)),
     ('tb_oryukdo_scheduler', dict(DECODE=1, EX_LANES=3, ENTRIES=17, PHY=18, UPDATES=2)),
     ('tb_oryukdo_scheduler', dict(DECODE=3, EX_LANES=7, ENTRIES=32, UPDATES=3)),

@@ -1,0 +1,392 @@
+:root {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: #f5f5f7;
+  background-color: #111111;
+
+  /* SoundCloud Color Palette */
+  --primary-orange: #ff5500;
+  --bg-dark: #111111;
+  --bg-card: #181818;
+  --bg-card-hover: #222222;
+  --border-color: #2c2c2c;
+  --text-main: #ffffff;
+  --text-muted: #8e8e93;
+  --accent-blue: #007aff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Header styling in style of SoundCloud */
+.app-header {
+  height: 48px;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sc-orange-bar {
+  width: 4px;
+  height: 20px;
+  background-color: var(--primary-orange);
+}
+
+.app-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+.app-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* 3-Column Layout */
+.app-body {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 48px);
+  overflow: hidden;
+}
+
+/* Panels generic */
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-right: 1px solid var(--border-color);
+}
+
+.panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+/* Sidebar panel */
+.sidebar {
+  width: 320px;
+  background-color: #151515;
+  overflow-y: auto;
+}
+
+.sidebar-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Form inputs & Range sliders (Custom SoundCloud design) */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-main);
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-value {
+  color: var(--primary-orange);
+  font-weight: 600;
+}
+
+.slider-description {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* SoundCloud Styled number inputs */
+input[type="number"] {
+  background-color: #1e1e1e;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 12px;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+  border-radius: 2px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="number"]:focus {
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 4px rgba(255, 85, 0, 0.4);
+}
+
+/* Center visualizer canvas */
+.canvas-container {
+  flex: 1;
+  background-color: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.canvas-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  position: relative;
+}
+
+/* SVG Elements styles */
+.svg-pipeline {
+  width: 100%;
+  height: 100%;
+  max-width: 800px;
+  max-height: 600px;
+}
+
+/* Node styles */
+.pipeline-node {
+  fill: #1e1e1e;
+  stroke: var(--border-color);
+  stroke-width: 1.5;
+  transition: stroke 0.3s ease, fill 0.3s ease;
+}
+
+.pipeline-node:hover {
+  fill: #222222;
+  stroke: var(--primary-orange);
+}
+
+.pipeline-node-active {
+  stroke: var(--primary-orange);
+  stroke-width: 2;
+}
+
+.node-text {
+  fill: var(--text-main);
+  font-size: 11px;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.node-subtext {
+  fill: var(--text-muted);
+  font-size: 9px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+/* Glowing Flow Paths */
+.flow-line {
+  stroke: #444444;
+  stroke-width: 1.5;
+  stroke-dasharray: 4, 4;
+  fill: none;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease;
+}
+
+.flow-line-active {
+  stroke: var(--primary-orange);
+  stroke-width: 2;
+  animation: dash 1s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+/* Code preview window (Right Panel) */
+.code-panel {
+  width: 440px;
+  background-color: #151515;
+  border-right: none;
+}
+
+.code-container {
+  flex: 1;
+  padding: 16px;
+  overflow: auto;
+  background-color: #0d0d0d;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #d1d1d1;
+}
+
+.code-pre {
+  white-space: pre;
+}
+
+/* Plain but premium button design */
+.button-group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  background-color: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background-color: var(--primary-orange);
+  border-color: var(--primary-orange);
+}
+
+.btn-primary {
+  background-color: var(--primary-orange);
+  border-color: var(--primary-orange);
+}
+
+.btn-primary:hover {
+  background-color: #e04b00;
+  border-color: #e04b00;
+}
+
+/* Tooltip */
+.tooltip-card {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  background-color: rgba(26, 26, 26, 0.95);
+  border: 1px solid var(--primary-orange);
+  padding: 14px;
+  width: 280px;
+  border-radius: 2px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.tooltip-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tooltip-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-orange);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.tooltip-desc {
+  font-size: 11px;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+/* Tab Buttons Hover & Active */
+.tab-btn:hover {
+  color: var(--primary-orange) !important;
+  text-shadow: 0 0 8px rgba(255, 85, 0, 0.4);
+}
+
+/* Custom Table Style for Decoder Customizer */
+.instruction-table th {
+  background-color: #181818;
+  border-bottom: 2px solid var(--border-color);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  padding: 8px 6px;
+}
+
+.instruction-table td {
+  border-bottom: 1px solid #1c1c1c;
+  vertical-align: middle;
+}
+
+.instruction-table tr:hover {
+  background-color: #151515;
+}
+
+/* Custom select dropdown styling */
+select {
+  background-color: #1e1e1e;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 6px 10px;
+  font-size: 12px;
+  outline: none;
+  border-radius: 2px;
+  transition: border-color 0.2s ease;
+}
+
+select:focus {
+  border-color: var(--primary-orange);
+}
+
+input[type="checkbox"] {
+  accent-color: var(--primary-orange);
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+}

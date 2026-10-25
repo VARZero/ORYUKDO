@@ -1,0 +1,4 @@
+build/
+scripts/
+verification_report.txt
+__pycache__/

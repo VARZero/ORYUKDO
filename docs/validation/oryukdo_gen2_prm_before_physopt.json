@@ -1,0 +1,929 @@
+{
+  "base_eulsukdo_commit": "9b0e1c6b792b132f05844c3113ff8dfde712cd77",
+  "integrated_regression": {
+    "directory": "build\\oryukdo_prm_reservation_regression",
+    "cases": [
+      {
+        "name": "tb_oryukdo_scheduler__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__EXTERNAL_PREDICTOR-1",
+        "parameters": {
+          "EXTERNAL_PREDICTOR": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__DECODE-1_EX_LANES-3_ENTRIES-17_PHY-18_UPDATES-2",
+        "parameters": {
+          "DECODE": 1,
+          "EX_LANES": 3,
+          "ENTRIES": 17,
+          "PHY": 18,
+          "UPDATES": 2
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__DECODE-3_EX_LANES-7_ENTRIES-32_UPDATES-3",
+        "parameters": {
+          "DECODE": 3,
+          "EX_LANES": 7,
+          "ENTRIES": 32,
+          "UPDATES": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__DECODE-1_ENTRIES-17_PHY-18_WINDOW_SIZE-64",
+        "parameters": {
+          "DECODE": 1,
+          "ENTRIES": 17,
+          "PHY": 18,
+          "WINDOW_SIZE": 64
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__ENTRIES-128_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+        "parameters": {
+          "ENTRIES": 128,
+          "PHY": 64,
+          "ARCH": 32,
+          "GEN_W": 32,
+          "EPOCH_W": 32,
+          "RS_DEPTH": 128
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__ENTRIES-64_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+        "parameters": {
+          "ENTRIES": 64,
+          "PHY": 64,
+          "ARCH": 32,
+          "GEN_W": 32,
+          "EPOCH_W": 32,
+          "RS_DEPTH": 128
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__ENTRIES-32_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+        "parameters": {
+          "ENTRIES": 32,
+          "PHY": 64,
+          "ARCH": 32,
+          "GEN_W": 32,
+          "EPOCH_W": 32,
+          "RS_DEPTH": 128
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_completion_queue__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_completion_queue__LANES-3_DEPTH-3",
+        "parameters": {
+          "LANES": 3,
+          "DEPTH": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_nel__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_result_selector__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_result_selector__LANES-3",
+        "parameters": {
+          "LANES": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_result_selector__LANES-7",
+        "parameters": {
+          "LANES": 7
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_prm_reservation__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_prm_reservation__DECODE-3_DEPTH-2_ROW_DEPTH-3",
+        "parameters": {
+          "DECODE": 3,
+          "DEPTH": 2,
+          "ROW_DEPTH": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_prm_reservation__DECODE-1_ROW_DEPTH-2",
+        "parameters": {
+          "DECODE": 1,
+          "ROW_DEPTH": 2
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      }
+    ]
+  },
+  "eulsukdo_reference_regression": {
+    "directory": "build\\oryukdo_baseline_regression",
+    "cases": [
+      {
+        "name": "tb_scheduler_flow__DECODE-3_WINDOWS-3_RANGE-5_UPDATES-3_WRITES-0",
+        "parameters": {
+          "DECODE": 3,
+          "WINDOWS": 3,
+          "RANGE": 5,
+          "UPDATES": 3,
+          "WRITES": 0
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-1_WINDOWS-1_RANGE-2_UPDATES-1_WRITES-0",
+        "parameters": {
+          "DECODE": 1,
+          "WINDOWS": 1,
+          "RANGE": 2,
+          "UPDATES": 1,
+          "WRITES": 0
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-2_WINDOWS-3_RANGE-5_UPDATES-3_WRITES-1",
+        "parameters": {
+          "DECODE": 2,
+          "WINDOWS": 3,
+          "RANGE": 5,
+          "UPDATES": 3,
+          "WRITES": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-1_WINDOWS-1_RANGE-2_UPDATES-1_WRITES-1",
+        "parameters": {
+          "DECODE": 1,
+          "WINDOWS": 1,
+          "RANGE": 2,
+          "UPDATES": 1,
+          "WRITES": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-3_WINDOWS-3_RANGE-5_UPDATES-3_WRITES-0_LSQ-1",
+        "parameters": {
+          "DECODE": 3,
+          "WINDOWS": 3,
+          "RANGE": 5,
+          "UPDATES": 3,
+          "WRITES": 0,
+          "LSQ": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-2_WINDOWS-3_RANGE-5_UPDATES-3_WRITES-1_LSQ-1",
+        "parameters": {
+          "DECODE": 2,
+          "WINDOWS": 3,
+          "RANGE": 5,
+          "UPDATES": 3,
+          "WRITES": 1,
+          "LSQ": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-1_WINDOWS-1_RANGE-2_UPDATES-1_WRITES-1_LSQ-1",
+        "parameters": {
+          "DECODE": 1,
+          "WINDOWS": 1,
+          "RANGE": 2,
+          "UPDATES": 1,
+          "WRITES": 1,
+          "LSQ": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      }
+    ]
+  },
+  "additional_regressions": [],
+  "fpga": {
+    "manifest": {
+      "requested_mhz": 70,
+      "part": "xc7z020clg400-1",
+      "decode": 2,
+      "issue": 5,
+      "top": "oryukdo_scheduler",
+      "entries": 32,
+      "phy": 64,
+      "rs_depth": 128,
+      "windows": 8,
+      "window_size": 16,
+      "generation_bits": 32,
+      "threads": 8,
+      "synth_only": false,
+      "original_source_hashes": {
+        "_element_logics.sv": "b330cb3f3af0bc1e0650f40ea11b5d407378718bc6a945f669c1228f1fa8df6d",
+        "eulsukdo_scheduler.sv": "333f20659a0ae18bf7f22318e288b0729fc8089b01fa28db4b35b84686dcbdad",
+        "flow_control_logic.sv": "8bc64d4778f86e270172a5777723830b58932e171d40ec4c9ad236ac465715c6",
+        "instruction_state_table.sv": "3362962bcd15bd66431baafafef0f48bec3f8be552c65902b832e75028f7569e",
+        "load_store_queue.sv": "36c378c4ab4d6b86d91b699fade7975fa022a5d5e5ca3b580083d4f530dedc2b",
+        "new_entry_logic.sv": "bab7518424804500c5c9d42fca1802fed3f602f7ba690dd9084c309917e33193",
+        "oryukdo_completion_queue.sv": "813f525c93282d739998cd61e5d7bbeb15cb8b63c7082731a0b8dc06449fcfa9",
+        "oryukdo_dependency_mapper.sv": "c9a2c5c06f1f98e7d0e8dbae9ed2dae110a1f198c1a3bcf1c7f898f1e3b4d14f",
+        "oryukdo_frontier.sv": "82c3b9f0cb68a2b7f8707e87de934b910e04e87b1d0717836c521c035f44849a",
+        "oryukdo_memory.sv": "ecbc02825c2d1950b0d309af32eaf06999241c9c4f0efdd94a3ab1b4d1cc3fb0",
+        "oryukdo_new_entry_logic.sv": "304683edc265b55bda9097eb8818d10b6fd433fb97e70b905abcd36bbc46263f",
+        "oryukdo_rename.sv": "71e38ce191daa08977c4502af67d0edb2233edbc5b356caed2837ca75fe1a116",
+        "oryukdo_result_selector.sv": "54e485819bfaa985693e9ef94ea13b22c20ad8c8d60cc4c604c90705f151be2d",
+        "oryukdo_scheduler.sv": "ff31bd5176d5ccdf24293cc9c4c7853fcdf1785fbebd037d0e82d85552bef8c7",
+        "physical_register_mapper.sv": "05f8efbe29c7378fbb6d5e25c6ed6e425d3d5aeba9dbb0cc85c733fa77b41d06",
+        "ready_station.sv": "d33c25b208cdcc0f24d91e951ac51608d30e81b0c305c3fc9e0cdc73915ab059",
+        "write_back_concatenation.sv": "9a62e2fdcdd6723a241d5d7e1264be3053427fbf47efa18dc878f6cd6fb41b68"
+      },
+      "synthesis_source_hashes": {
+        "_element_logics.sv": "2bd9182377819749da5b5637c9fdfa907e17db30f732cd8c93e0d730ec441fa3",
+        "eulsukdo_scheduler.sv": "e4bf5f84d67fa723b7b6da365184abbf354d93e8e217118466f2996c5d088812",
+        "flow_control_logic.sv": "e7a623c188d76c9597fdc17c1316349fccd1e8991f8221c2e82e952732529bd0",
+        "instruction_state_table.sv": "83cd66b6ea723dc3f4971127c6e16314a5575d42956e763bcccebe302718906e",
+        "load_store_queue.sv": "2f034721275a73c6400af5d1868378e337f17c7cae8f56dd2a8cedf9e16b7a99",
+        "new_entry_logic.sv": "2bb94854ddb91aa959b72c2ec975a9b9f8d92936a3b5096458eaff350d2a417e",
+        "oryukdo_completion_queue.sv": "813f525c93282d739998cd61e5d7bbeb15cb8b63c7082731a0b8dc06449fcfa9",
+        "oryukdo_dependency_mapper.sv": "e513025a525f5eb7a9e66e9325984452da27dfa2711f04382f8f52a0e89a1a12",
+        "oryukdo_frontier.sv": "393b63fda964e63642f593bdb4444c7319acf22a8f25a28564b585283ae6546a",
+        "oryukdo_memory.sv": "ecbc02825c2d1950b0d309af32eaf06999241c9c4f0efdd94a3ab1b4d1cc3fb0",
+        "oryukdo_new_entry_logic.sv": "304683edc265b55bda9097eb8818d10b6fd433fb97e70b905abcd36bbc46263f",
+        "oryukdo_rename.sv": "33a292af238b1fcc2deedd7c1748349127c3cf270afb1c080a87772df45314bc",
+        "oryukdo_result_selector.sv": "54e485819bfaa985693e9ef94ea13b22c20ad8c8d60cc4c604c90705f151be2d",
+        "oryukdo_scheduler.sv": "2992773531cdc18e60180d7ccf56e6121c87f436dc9592f6dfafcddd0af1acf4",
+        "physical_register_mapper.sv": "87fe77d260d59fc1f6eb1e59195ef304de1bb1dd29861d2f1e385d30e41886e4",
+        "ready_station.sv": "a8c462dbec8f2c8ab946861e04e9f8b29db2da2809c855670c1ccff457df691e",
+        "write_back_concatenation.sv": "94ad19cb421904318686796c22500137c8e350f2c5aec83a28a0e34423a27ecd"
+      },
+      "compatibility": "The two variable $countones uses are replaced only in the snapshot with the same helper used by the prior 75 MHz baseline.",
+      "vivado_executable": "D:/Xilinx2202/Vivado/2022.2/bin/vivado.bat",
+      "scope": "OOC scheduler; no external IO delay constraints, board wrapper, bitstream or hardware test",
+      "vivado_exit": 0,
+      "working_rtl_unchanged": true
+    },
+    "stages": {
+      "synth": {
+        "wns_ns": 1.785,
+        "tns_ns": 0.0,
+        "setup_failing_endpoints": 0.0,
+        "setup_total_endpoints": 60911.0,
+        "whs_ns": 0.21,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60911.0,
+        "wpws_ns": 5.893,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25226.0,
+        "timing_met": true,
+        "luts": 43255.0,
+        "ff": 23614.0,
+        "bram_tiles": 42.0,
+        "no_clock": 0,
+        "unconstrained_internal_endpoints": 0,
+        "loops": 0,
+        "latch_loops": 0,
+        "critical_path_and_netlist": {
+          "Latches": "0",
+          "Black boxes": "0",
+          "Setup slack": "1.785 ns",
+          "Data path delay": "12.122 ns",
+          "Logic levels": "13",
+          "Startpoint": "U_FRONTIER/reason_reg[0]/C",
+          "Endpoint": "U_PRM/notify_data_reg[0]/CE",
+          "Hold slack": "0.210 ns"
+        },
+        "top_level_hierarchy": {
+          "(oryukdo_scheduler)": {
+            "luts": 1230,
+            "ff": 2976,
+            "bram_tiles": 0.0
+          },
+          "U_COMPLETION": {
+            "luts": 4669,
+            "ff": 1496,
+            "bram_tiles": 0.0
+          },
+          "U_FRONTIER": {
+            "luts": 9860,
+            "ff": 4084,
+            "bram_tiles": 0.0
+          },
+          "U_IST": {
+            "luts": 6680,
+            "ff": 3654,
+            "bram_tiles": 0.0
+          },
+          "U_MEMORY": {
+            "luts": 6828,
+            "ff": 3989,
+            "bram_tiles": 0.0
+          },
+          "U_NEL": {
+            "luts": 3235,
+            "ff": 1110,
+            "bram_tiles": 0.0
+          },
+          "U_PRM": {
+            "luts": 6274,
+            "ff": 2661,
+            "bram_tiles": 0.0
+          },
+          "U_RS": {
+            "luts": 4481,
+            "ff": 3644,
+            "bram_tiles": 42.0
+          }
+        },
+        "drc": [
+          {
+            "rule": "CHECK-3",
+            "severity": "Warning",
+            "description": "Report rule limit reached",
+            "reported_count": 1
+          },
+          {
+            "rule": "REQP-1839",
+            "severity": "Warning",
+            "description": "RAMB36 async control check",
+            "reported_count": 20
+          },
+          {
+            "rule": "ZPS7-1",
+            "severity": "Warning",
+            "description": "PS7 block required",
+            "reported_count": 1
+          }
+        ]
+      },
+      "placed": {
+        "wns_ns": -0.72,
+        "tns_ns": -180.507,
+        "setup_failing_endpoints": 1016.0,
+        "setup_total_endpoints": 60910.0,
+        "whs_ns": -0.117,
+        "ths_ns": -0.263,
+        "hold_failing_endpoints": 5.0,
+        "hold_total_endpoints": 60910.0,
+        "wpws_ns": 5.893,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25226.0,
+        "timing_met": false,
+        "luts": 43317.0,
+        "ff": 23614.0,
+        "bram_tiles": 42.0,
+        "no_clock": 0,
+        "unconstrained_internal_endpoints": 0,
+        "loops": 0,
+        "latch_loops": 0,
+        "critical_path_and_netlist": {
+          "Latches": "0",
+          "Black boxes": "0",
+          "Setup slack": "-0.720 ns",
+          "Data path delay": "14.918 ns",
+          "Logic levels": "20",
+          "Startpoint": "U_FRONTIER/reason_reg[2]/C",
+          "Endpoint": "U_MEMORY/entries_reg[31][generation][30]/D",
+          "Hold slack": "-0.117 ns"
+        },
+        "top_level_hierarchy": {
+          "(oryukdo_scheduler)": {
+            "luts": 1228,
+            "ff": 2976,
+            "bram_tiles": 0.0
+          },
+          "U_COMPLETION": {
+            "luts": 4647,
+            "ff": 1496,
+            "bram_tiles": 0.0
+          },
+          "U_FRONTIER": {
+            "luts": 10104,
+            "ff": 4084,
+            "bram_tiles": 0.0
+          },
+          "U_IST": {
+            "luts": 6626,
+            "ff": 3654,
+            "bram_tiles": 0.0
+          },
+          "U_MEMORY": {
+            "luts": 6794,
+            "ff": 3989,
+            "bram_tiles": 0.0
+          },
+          "U_NEL": {
+            "luts": 3212,
+            "ff": 1110,
+            "bram_tiles": 0.0
+          },
+          "U_PRM": {
+            "luts": 6266,
+            "ff": 2661,
+            "bram_tiles": 0.0
+          },
+          "U_RS": {
+            "luts": 4461,
+            "ff": 3644,
+            "bram_tiles": 42.0
+          }
+        },
+        "drc": [
+          {
+            "rule": "CHECK-3",
+            "severity": "Warning",
+            "description": "Report rule limit reached",
+            "reported_count": 1
+          },
+          {
+            "rule": "REQP-1839",
+            "severity": "Warning",
+            "description": "RAMB36 async control check",
+            "reported_count": 20
+          },
+          {
+            "rule": "ZPS7-1",
+            "severity": "Warning",
+            "description": "PS7 block required",
+            "reported_count": 1
+          }
+        ]
+      },
+      "routed": {
+        "wns_ns": -0.359,
+        "tns_ns": -1.995,
+        "setup_failing_endpoints": 24.0,
+        "setup_total_endpoints": 60910.0,
+        "whs_ns": 0.06,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60910.0,
+        "wpws_ns": 5.893,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25226.0,
+        "timing_met": false,
+        "luts": 43317.0,
+        "ff": 23614.0,
+        "bram_tiles": 42.0,
+        "no_clock": 0,
+        "unconstrained_internal_endpoints": 0,
+        "loops": 0,
+        "latch_loops": 0,
+        "critical_path_and_netlist": {
+          "Latches": "0",
+          "Black boxes": "0",
+          "Setup slack": "-0.359 ns",
+          "Data path delay": "14.674 ns",
+          "Logic levels": "15",
+          "Startpoint": "U_MEMORY/entries_reg[5][generation][1]/C",
+          "Endpoint": "U_MEMORY/entries_reg[28][nonspec]/D",
+          "Hold slack": "0.060 ns"
+        },
+        "top_level_hierarchy": {
+          "(oryukdo_scheduler)": {
+            "luts": 1228,
+            "ff": 2976,
+            "bram_tiles": 0.0
+          },
+          "U_COMPLETION": {
+            "luts": 4647,
+            "ff": 1496,
+            "bram_tiles": 0.0
+          },
+          "U_FRONTIER": {
+            "luts": 10104,
+            "ff": 4084,
+            "bram_tiles": 0.0
+          },
+          "U_IST": {
+            "luts": 6626,
+            "ff": 3654,
+            "bram_tiles": 0.0
+          },
+          "U_MEMORY": {
+            "luts": 6794,
+            "ff": 3989,
+            "bram_tiles": 0.0
+          },
+          "U_NEL": {
+            "luts": 3212,
+            "ff": 1110,
+            "bram_tiles": 0.0
+          },
+          "U_PRM": {
+            "luts": 6266,
+            "ff": 2661,
+            "bram_tiles": 0.0
+          },
+          "U_RS": {
+            "luts": 4461,
+            "ff": 3644,
+            "bram_tiles": 42.0
+          }
+        },
+        "drc": [
+          {
+            "rule": "CHECK-3",
+            "severity": "Warning",
+            "description": "Report rule limit reached",
+            "reported_count": 1
+          },
+          {
+            "rule": "REQP-1839",
+            "severity": "Warning",
+            "description": "RAMB36 async control check",
+            "reported_count": 20
+          },
+          {
+            "rule": "RTSTAT-10",
+            "severity": "Warning",
+            "description": "No routable loads",
+            "reported_count": 1
+          },
+          {
+            "rule": "ZPS7-1",
+            "severity": "Warning",
+            "description": "PS7 block required",
+            "reported_count": 1
+          }
+        ]
+      },
+      "opt": {
+        "wns_ns": 1.785,
+        "tns_ns": 0.0,
+        "setup_failing_endpoints": 0.0,
+        "setup_total_endpoints": 60910.0,
+        "whs_ns": 0.21,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60910.0,
+        "wpws_ns": 5.893,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25226.0,
+        "timing_met": true,
+        "luts": 43234.0,
+        "ff": 23614.0,
+        "bram_tiles": 42.0,
+        "no_clock": 0,
+        "unconstrained_internal_endpoints": 0,
+        "loops": 0,
+        "latch_loops": 0,
+        "critical_path_and_netlist": {
+          "Latches": "0",
+          "Black boxes": "0",
+          "Setup slack": "1.785 ns",
+          "Data path delay": "12.122 ns",
+          "Logic levels": "13",
+          "Startpoint": "U_FRONTIER/reason_reg[0]/C",
+          "Endpoint": "U_PRM/notify_data_reg[0]/CE",
+          "Hold slack": "0.210 ns"
+        },
+        "top_level_hierarchy": {
+          "(oryukdo_scheduler)": {
+            "luts": 1230,
+            "ff": 2976,
+            "bram_tiles": 0.0
+          },
+          "U_COMPLETION": {
+            "luts": 4657,
+            "ff": 1496,
+            "bram_tiles": 0.0
+          },
+          "U_FRONTIER": {
+            "luts": 9858,
+            "ff": 4084,
+            "bram_tiles": 0.0
+          },
+          "U_IST": {
+            "luts": 6675,
+            "ff": 3654,
+            "bram_tiles": 0.0
+          },
+          "U_MEMORY": {
+            "luts": 6827,
+            "ff": 3989,
+            "bram_tiles": 0.0
+          },
+          "U_NEL": {
+            "luts": 3235,
+            "ff": 1110,
+            "bram_tiles": 0.0
+          },
+          "U_PRM": {
+            "luts": 6274,
+            "ff": 2661,
+            "bram_tiles": 0.0
+          },
+          "U_RS": {
+            "luts": 4480,
+            "ff": 3644,
+            "bram_tiles": 42.0
+          }
+        },
+        "drc": [
+          {
+            "rule": "CHECK-3",
+            "severity": "Warning",
+            "description": "Report rule limit reached",
+            "reported_count": 1
+          },
+          {
+            "rule": "REQP-1839",
+            "severity": "Warning",
+            "description": "RAMB36 async control check",
+            "reported_count": 20
+          },
+          {
+            "rule": "ZPS7-1",
+            "severity": "Warning",
+            "description": "PS7 block required",
+            "reported_count": 1
+          }
+        ]
+      }
+    },
+    "route": {
+      "routable_nets": 52914,
+      "fully_routed_nets": 52914,
+      "routing_error_nets": 0,
+      "complete": true
+    },
+    "fresh_build_pass": false,
+    "fixed_route_sweep": [
+      {
+        "mhz": 60.0,
+        "period_ns": 16.667,
+        "setup_slack_ns": 2.022,
+        "hold_slack_ns": 0.06,
+        "wns_ns": 2.022,
+        "tns_ns": 0.0,
+        "setup_failing_endpoints": 0.0,
+        "setup_total_endpoints": 60910.0,
+        "whs_ns": 0.06,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60910.0,
+        "wpws_ns": 7.083,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25226.0,
+        "timing_met": true
+      },
+      {
+        "mhz": 68.2,
+        "period_ns": 14.663,
+        "setup_slack_ns": 0.018,
+        "hold_slack_ns": 0.06,
+        "wns_ns": 0.018,
+        "tns_ns": 0.0,
+        "setup_failing_endpoints": 0.0,
+        "setup_total_endpoints": 60910.0,
+        "whs_ns": 0.06,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60910.0,
+        "wpws_ns": 6.081,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25226.0,
+        "timing_met": true
+      },
+      {
+        "mhz": 68.3,
+        "period_ns": 14.641,
+        "setup_slack_ns": -0.004,
+        "hold_slack_ns": 0.06,
+        "wns_ns": -0.004,
+        "tns_ns": -0.004,
+        "setup_failing_endpoints": 1.0,
+        "setup_total_endpoints": 60910.0,
+        "whs_ns": 0.06,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60910.0,
+        "wpws_ns": 6.07,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25226.0,
+        "timing_met": false
+      },
+      {
+        "mhz": 70.0,
+        "period_ns": 14.286,
+        "setup_slack_ns": -0.359,
+        "hold_slack_ns": 0.06,
+        "wns_ns": -0.359,
+        "tns_ns": -1.995,
+        "setup_failing_endpoints": 24.0,
+        "setup_total_endpoints": 60910.0,
+        "whs_ns": 0.06,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60910.0,
+        "wpws_ns": 5.893,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25226.0,
+        "timing_met": false
+      },
+      {
+        "mhz": 75.0,
+        "period_ns": 13.333,
+        "setup_slack_ns": -1.312,
+        "hold_slack_ns": 0.06,
+        "wns_ns": -1.312,
+        "tns_ns": -729.777,
+        "setup_failing_endpoints": 2079.0,
+        "setup_total_endpoints": 60910.0,
+        "whs_ns": 0.06,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60910.0,
+        "wpws_ns": 5.416,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25226.0,
+        "timing_met": false
+      }
+    ],
+    "fixed_route_best_measured_mhz": 68.2,
+    "route_complete": true,
+    "functional_netlist_pass": true,
+    "gate_simulation": {
+      "netlist_sha256": "2378affaa4a43a1cad6605b44d6980780ad77a8e3b9c595d5010c18332ec2dd6",
+      "bench_sha256": "9819d018e61330e74742b52108da8886f75d6d84dc131c152555408375386e3d",
+      "passed": true,
+      "stages": [
+        {
+          "command": [
+            "D:\\Xilinx2202\\Vivado\\2022.2\\bin\\xvlog.bat",
+            "--sv",
+            "D:\\work_buffer\\esd\\ORYUKDO\\gen2\\build\\oryukdo_prm_reservation32_70mhz\\funcsim.v",
+            "D:\\work_buffer\\esd\\ORYUKDO\\gen2\\build\\oryukdo_prm_reservation32_70mhz\\gate_sim\\tb.sv"
+          ],
+          "exit": 0
+        },
+        {
+          "command": [
+            "D:\\Xilinx2202\\Vivado\\2022.2\\bin\\xelab.bat",
+            "tb_oryukdo_scheduler",
+            "glbl",
+            "-L",
+            "unisims_ver",
+            "-L",
+            "unimacro_ver",
+            "-s",
+            "gate",
+            "-debug",
+            "off",
+            "-mt",
+            "4"
+          ],
+          "exit": 0
+        },
+        {
+          "command": [
+            "D:\\Xilinx2202\\Vivado\\2022.2\\bin\\xsim.bat",
+            "gate",
+            "-runall"
+          ],
+          "exit": 0
+        }
+      ],
+      "performance": [
+        {
+          "mode": 0,
+          "instructions": 32,
+          "cycles": 91
+        },
+        {
+          "mode": 1,
+          "instructions": 32,
+          "cycles": 555
+        }
+      ]
+    },
+    "validated_build_pass": false,
+    "connectivity_audit": [
+      "i_agu_address endpoints=1024",
+      "i_agu_data endpoints=1024",
+      "i_agu_mask endpoints=128",
+      "i_result_data endpoints=320",
+      "i_ex_get endpoints=4538",
+      "o_agu_ready startpoints=2283",
+      "o_result_accept startpoints=1353",
+      "o_wb_valid startpoints=2432",
+      "o_mem_address startpoints=32",
+      "o_mem_data startpoints=32"
+    ],
+    "prm_reservation_audit": [
+      "PRM row counter registers: 192",
+      "PRM mapping registers: 1280",
+      "PRM reservation registers: 37",
+      "Counter-to-mapping timing paths: 0",
+      "Counter-to-mapping combinational fanout endpoints: 0"
+    ]
+  },
+  "scheduler_cycle_comparison": {
+    "scope": "32 scripted instructions, public-interface functional netlists; not full-CPU IPC",
+    "baseline_build": "D:\\work_buffer\\esd\\ORYUKDO\\gen2\\build\\oryukdo_parallel_completion32_70mhz_physopt",
+    "baseline_gate_directory": "D:\\work_buffer\\esd\\ORYUKDO\\gen2\\build\\oryukdo_prm_reservation_baseline_gate",
+    "baseline_netlist_sha256": "25a6d237b7b79c9bea2d06bbc1cbf6f2f41d668d740dbd123a1f0fe20908044e",
+    "current_netlist_sha256": "2378affaa4a43a1cad6605b44d6980780ad77a8e3b9c595d5010c18332ec2dd6",
+    "shared_bench_sha256": "9819d018e61330e74742b52108da8886f75d6d84dc131c152555408375386e3d",
+    "cases": [
+      {
+        "mode": 0,
+        "workload": "independent",
+        "instructions": 32,
+        "before_cycles": 91,
+        "after_cycles": 91
+      },
+      {
+        "mode": 1,
+        "workload": "dependent_chain",
+        "instructions": 32,
+        "before_cycles": 553,
+        "after_cycles": 555
+      }
+    ]
+  }
+}

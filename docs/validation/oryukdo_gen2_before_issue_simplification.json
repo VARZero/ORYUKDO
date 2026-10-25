@@ -1,0 +1,837 @@
+{
+  "base_eulsukdo_commit": "9b0e1c6b792b132f05844c3113ff8dfde712cd77",
+  "integrated_regression": {
+    "directory": "build\\oryukdo_memory_completion_regression",
+    "cases": [
+      {
+        "name": "tb_oryukdo_scheduler__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__EXTERNAL_PREDICTOR-1",
+        "parameters": {
+          "EXTERNAL_PREDICTOR": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__DECODE-1_EX_LANES-3_ENTRIES-17_PHY-18_UPDATES-2",
+        "parameters": {
+          "DECODE": 1,
+          "EX_LANES": 3,
+          "ENTRIES": 17,
+          "PHY": 18,
+          "UPDATES": 2
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__DECODE-3_EX_LANES-7_ENTRIES-32_UPDATES-3",
+        "parameters": {
+          "DECODE": 3,
+          "EX_LANES": 7,
+          "ENTRIES": 32,
+          "UPDATES": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__DECODE-1_ENTRIES-17_PHY-18_WINDOW_SIZE-64",
+        "parameters": {
+          "DECODE": 1,
+          "ENTRIES": 17,
+          "PHY": 18,
+          "WINDOW_SIZE": 64
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__ENTRIES-128_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+        "parameters": {
+          "ENTRIES": 128,
+          "PHY": 64,
+          "ARCH": 32,
+          "GEN_W": 32,
+          "EPOCH_W": 32,
+          "RS_DEPTH": 128
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__ENTRIES-64_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+        "parameters": {
+          "ENTRIES": 64,
+          "PHY": 64,
+          "ARCH": 32,
+          "GEN_W": 32,
+          "EPOCH_W": 32,
+          "RS_DEPTH": 128
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__ENTRIES-32_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+        "parameters": {
+          "ENTRIES": 32,
+          "PHY": 64,
+          "ARCH": 32,
+          "GEN_W": 32,
+          "EPOCH_W": 32,
+          "RS_DEPTH": 128
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_completion_queue__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_completion_queue__LANES-3_DEPTH-3",
+        "parameters": {
+          "LANES": 3,
+          "DEPTH": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_nel__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      }
+    ]
+  },
+  "eulsukdo_reference_regression": {
+    "directory": "build\\oryukdo_baseline_regression",
+    "cases": [
+      {
+        "name": "tb_scheduler_flow__DECODE-3_WINDOWS-3_RANGE-5_UPDATES-3_WRITES-0",
+        "parameters": {
+          "DECODE": 3,
+          "WINDOWS": 3,
+          "RANGE": 5,
+          "UPDATES": 3,
+          "WRITES": 0
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-1_WINDOWS-1_RANGE-2_UPDATES-1_WRITES-0",
+        "parameters": {
+          "DECODE": 1,
+          "WINDOWS": 1,
+          "RANGE": 2,
+          "UPDATES": 1,
+          "WRITES": 0
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-2_WINDOWS-3_RANGE-5_UPDATES-3_WRITES-1",
+        "parameters": {
+          "DECODE": 2,
+          "WINDOWS": 3,
+          "RANGE": 5,
+          "UPDATES": 3,
+          "WRITES": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-1_WINDOWS-1_RANGE-2_UPDATES-1_WRITES-1",
+        "parameters": {
+          "DECODE": 1,
+          "WINDOWS": 1,
+          "RANGE": 2,
+          "UPDATES": 1,
+          "WRITES": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-3_WINDOWS-3_RANGE-5_UPDATES-3_WRITES-0_LSQ-1",
+        "parameters": {
+          "DECODE": 3,
+          "WINDOWS": 3,
+          "RANGE": 5,
+          "UPDATES": 3,
+          "WRITES": 0,
+          "LSQ": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-2_WINDOWS-3_RANGE-5_UPDATES-3_WRITES-1_LSQ-1",
+        "parameters": {
+          "DECODE": 2,
+          "WINDOWS": 3,
+          "RANGE": 5,
+          "UPDATES": 3,
+          "WRITES": 1,
+          "LSQ": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_scheduler_flow__DECODE-1_WINDOWS-1_RANGE-2_UPDATES-1_WRITES-1_LSQ-1",
+        "parameters": {
+          "DECODE": 1,
+          "WINDOWS": 1,
+          "RANGE": 2,
+          "UPDATES": 1,
+          "WRITES": 1,
+          "LSQ": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      }
+    ]
+  },
+  "additional_regressions": [],
+  "fpga": {
+    "manifest": {
+      "requested_mhz": 70,
+      "part": "xc7z020clg400-1",
+      "decode": 2,
+      "issue": 5,
+      "top": "oryukdo_scheduler",
+      "entries": 32,
+      "phy": 64,
+      "rs_depth": 128,
+      "windows": 8,
+      "window_size": 16,
+      "generation_bits": 32,
+      "threads": 8,
+      "synth_only": false,
+      "original_source_hashes": {
+        "_element_logics.sv": "b330cb3f3af0bc1e0650f40ea11b5d407378718bc6a945f669c1228f1fa8df6d",
+        "eulsukdo_scheduler.sv": "333f20659a0ae18bf7f22318e288b0729fc8089b01fa28db4b35b84686dcbdad",
+        "flow_control_logic.sv": "8bc64d4778f86e270172a5777723830b58932e171d40ec4c9ad236ac465715c6",
+        "instruction_state_table.sv": "3362962bcd15bd66431baafafef0f48bec3f8be552c65902b832e75028f7569e",
+        "load_store_queue.sv": "36c378c4ab4d6b86d91b699fade7975fa022a5d5e5ca3b580083d4f530dedc2b",
+        "new_entry_logic.sv": "bab7518424804500c5c9d42fca1802fed3f602f7ba690dd9084c309917e33193",
+        "oryukdo_completion_queue.sv": "813f525c93282d739998cd61e5d7bbeb15cb8b63c7082731a0b8dc06449fcfa9",
+        "oryukdo_dependency_mapper.sv": "f8970fbcffb1d197ae5637d03ab6a8d6dfb7cd380a311c51e2d6e983af2a3145",
+        "oryukdo_frontier.sv": "82c3b9f0cb68a2b7f8707e87de934b910e04e87b1d0717836c521c035f44849a",
+        "oryukdo_memory.sv": "ecbc02825c2d1950b0d309af32eaf06999241c9c4f0efdd94a3ab1b4d1cc3fb0",
+        "oryukdo_new_entry_logic.sv": "304683edc265b55bda9097eb8818d10b6fd433fb97e70b905abcd36bbc46263f",
+        "oryukdo_rename.sv": "71e38ce191daa08977c4502af67d0edb2233edbc5b356caed2837ca75fe1a116",
+        "oryukdo_scheduler.sv": "e93452b7b43a7f2be9cffec8f7aab796890d5884e701409c592f789c2dd69ce1",
+        "physical_register_mapper.sv": "05f8efbe29c7378fbb6d5e25c6ed6e425d3d5aeba9dbb0cc85c733fa77b41d06",
+        "ready_station.sv": "d33c25b208cdcc0f24d91e951ac51608d30e81b0c305c3fc9e0cdc73915ab059",
+        "write_back_concatenation.sv": "9a62e2fdcdd6723a241d5d7e1264be3053427fbf47efa18dc878f6cd6fb41b68"
+      },
+      "synthesis_source_hashes": {
+        "_element_logics.sv": "2bd9182377819749da5b5637c9fdfa907e17db30f732cd8c93e0d730ec441fa3",
+        "eulsukdo_scheduler.sv": "e4bf5f84d67fa723b7b6da365184abbf354d93e8e217118466f2996c5d088812",
+        "flow_control_logic.sv": "e7a623c188d76c9597fdc17c1316349fccd1e8991f8221c2e82e952732529bd0",
+        "instruction_state_table.sv": "83cd66b6ea723dc3f4971127c6e16314a5575d42956e763bcccebe302718906e",
+        "load_store_queue.sv": "2f034721275a73c6400af5d1868378e337f17c7cae8f56dd2a8cedf9e16b7a99",
+        "new_entry_logic.sv": "2bb94854ddb91aa959b72c2ec975a9b9f8d92936a3b5096458eaff350d2a417e",
+        "oryukdo_completion_queue.sv": "813f525c93282d739998cd61e5d7bbeb15cb8b63c7082731a0b8dc06449fcfa9",
+        "oryukdo_dependency_mapper.sv": "0a18a967e1d69ba86157b7171862dacd5a110e03a377f21e7f579cafa1de670b",
+        "oryukdo_frontier.sv": "393b63fda964e63642f593bdb4444c7319acf22a8f25a28564b585283ae6546a",
+        "oryukdo_memory.sv": "ecbc02825c2d1950b0d309af32eaf06999241c9c4f0efdd94a3ab1b4d1cc3fb0",
+        "oryukdo_new_entry_logic.sv": "304683edc265b55bda9097eb8818d10b6fd433fb97e70b905abcd36bbc46263f",
+        "oryukdo_rename.sv": "33a292af238b1fcc2deedd7c1748349127c3cf270afb1c080a87772df45314bc",
+        "oryukdo_scheduler.sv": "8e13cb14cb36ab5efa661493e095dbf718cbcaceef1618a4475e528295618051",
+        "physical_register_mapper.sv": "87fe77d260d59fc1f6eb1e59195ef304de1bb1dd29861d2f1e385d30e41886e4",
+        "ready_station.sv": "a8c462dbec8f2c8ab946861e04e9f8b29db2da2809c855670c1ccff457df691e",
+        "write_back_concatenation.sv": "94ad19cb421904318686796c22500137c8e350f2c5aec83a28a0e34423a27ecd"
+      },
+      "compatibility": "The two variable $countones uses are replaced only in the snapshot with the same helper used by the prior 75 MHz baseline.",
+      "vivado_executable": "D:/Xilinx2202/Vivado/2022.2/bin/vivado.bat",
+      "scope": "OOC scheduler; no external IO delay constraints, board wrapper, bitstream or hardware test",
+      "vivado_exit": 0,
+      "working_rtl_unchanged": true
+    },
+    "stages": {
+      "synth": {
+        "wns_ns": -1.255,
+        "tns_ns": -881.263,
+        "setup_failing_endpoints": 1329.0,
+        "setup_total_endpoints": 60833.0,
+        "whs_ns": 0.21,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60833.0,
+        "wpws_ns": 5.893,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25207.0,
+        "timing_met": false,
+        "luts": 45594.0,
+        "ff": 23595.0,
+        "bram_tiles": 42.0,
+        "no_clock": 0,
+        "unconstrained_internal_endpoints": 0,
+        "loops": 0,
+        "latch_loops": 0,
+        "critical_path_and_netlist": {
+          "Latches": "0",
+          "Black boxes": "0",
+          "Setup slack": "-1.255 ns",
+          "Data path delay": "15.162 ns",
+          "Logic levels": "18",
+          "Startpoint": "U_FRONTIER/reason_reg[0]/C",
+          "Endpoint": "U_PRM/GEN_PRM_IST_MAP[1].U_PRM_IST_MAP/reg_mem_reg[51][0]/CE",
+          "Hold slack": "0.210 ns"
+        },
+        "top_level_hierarchy": {
+          "(oryukdo_scheduler)": {
+            "luts": 2066,
+            "ff": 2968,
+            "bram_tiles": 0.0
+          },
+          "U_COMPLETION": {
+            "luts": 3562,
+            "ff": 1499,
+            "bram_tiles": 0.0
+          },
+          "U_FRONTIER": {
+            "luts": 10561,
+            "ff": 4080,
+            "bram_tiles": 0.0
+          },
+          "U_IST": {
+            "luts": 6987,
+            "ff": 3654,
+            "bram_tiles": 0.0
+          },
+          "U_MEMORY": {
+            "luts": 6760,
+            "ff": 3989,
+            "bram_tiles": 0.0
+          },
+          "U_NEL": {
+            "luts": 3262,
+            "ff": 1110,
+            "bram_tiles": 0.0
+          },
+          "U_PRM": {
+            "luts": 6285,
+            "ff": 2621,
+            "bram_tiles": 0.0
+          },
+          "U_RS": {
+            "luts": 6113,
+            "ff": 3674,
+            "bram_tiles": 42.0
+          }
+        },
+        "drc": [
+          {
+            "rule": "CHECK-3",
+            "severity": "Warning",
+            "description": "Report rule limit reached",
+            "reported_count": 2
+          },
+          {
+            "rule": "REQP-1839",
+            "severity": "Warning",
+            "description": "RAMB36 async control check",
+            "reported_count": 21
+          },
+          {
+            "rule": "ZPS7-1",
+            "severity": "Warning",
+            "description": "PS7 block required",
+            "reported_count": 1
+          }
+        ]
+      },
+      "placed": {
+        "wns_ns": -1.496,
+        "tns_ns": -4738.64,
+        "setup_failing_endpoints": 9079.0,
+        "setup_total_endpoints": 60832.0,
+        "whs_ns": -0.09,
+        "ths_ns": -0.407,
+        "hold_failing_endpoints": 12.0,
+        "hold_total_endpoints": 60832.0,
+        "wpws_ns": 5.893,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25207.0,
+        "timing_met": false,
+        "luts": 46041.0,
+        "ff": 23595.0,
+        "bram_tiles": 42.0,
+        "no_clock": 0,
+        "unconstrained_internal_endpoints": 0,
+        "loops": 0,
+        "latch_loops": 0,
+        "critical_path_and_netlist": {
+          "Latches": "0",
+          "Black boxes": "0",
+          "Setup slack": "-1.496 ns",
+          "Data path delay": "15.285 ns",
+          "Logic levels": "16",
+          "Startpoint": "U_FRONTIER/G_ROW[23].generations_reg[23][29]/C",
+          "Endpoint": "U_IST/G_INSTRUCTION_BANK[1].U_SRAM/mem_reg_0_3_78_83/RAMA_D1/I",
+          "Hold slack": "-0.090 ns"
+        },
+        "top_level_hierarchy": {
+          "(oryukdo_scheduler)": {
+            "luts": 2092,
+            "ff": 2968,
+            "bram_tiles": 0.0
+          },
+          "U_COMPLETION": {
+            "luts": 3539,
+            "ff": 1499,
+            "bram_tiles": 0.0
+          },
+          "U_FRONTIER": {
+            "luts": 10842,
+            "ff": 4080,
+            "bram_tiles": 0.0
+          },
+          "U_IST": {
+            "luts": 7000,
+            "ff": 3654,
+            "bram_tiles": 0.0
+          },
+          "U_MEMORY": {
+            "luts": 6741,
+            "ff": 3989,
+            "bram_tiles": 0.0
+          },
+          "U_NEL": {
+            "luts": 3276,
+            "ff": 1110,
+            "bram_tiles": 0.0
+          },
+          "U_PRM": {
+            "luts": 6431,
+            "ff": 2621,
+            "bram_tiles": 0.0
+          },
+          "U_RS": {
+            "luts": 6150,
+            "ff": 3674,
+            "bram_tiles": 42.0
+          }
+        },
+        "drc": [
+          {
+            "rule": "CHECK-3",
+            "severity": "Warning",
+            "description": "Report rule limit reached",
+            "reported_count": 3
+          },
+          {
+            "rule": "REQP-1839",
+            "severity": "Warning",
+            "description": "RAMB36 async control check",
+            "reported_count": 20
+          },
+          {
+            "rule": "ZPS7-1",
+            "severity": "Warning",
+            "description": "PS7 block required",
+            "reported_count": 1
+          }
+        ]
+      },
+      "routed": {
+        "wns_ns": -1.741,
+        "tns_ns": -7509.706,
+        "setup_failing_endpoints": 10647.0,
+        "setup_total_endpoints": 60832.0,
+        "whs_ns": 0.056,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60832.0,
+        "wpws_ns": 5.893,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25207.0,
+        "timing_met": false,
+        "luts": 46041.0,
+        "ff": 23595.0,
+        "bram_tiles": 42.0,
+        "no_clock": 0,
+        "unconstrained_internal_endpoints": 0,
+        "loops": 0,
+        "latch_loops": 0,
+        "critical_path_and_netlist": {
+          "Latches": "0",
+          "Black boxes": "0",
+          "Setup slack": "-1.741 ns",
+          "Data path delay": "15.492 ns",
+          "Logic levels": "15",
+          "Startpoint": "metadata_reg[21][generation][14]/C",
+          "Endpoint": "U_RS/genblk1[0].U_RS_FIFO/G_INPUT[2].U_FIFO/forward_data_reg[77]/CE",
+          "Hold slack": "0.056 ns"
+        },
+        "top_level_hierarchy": {
+          "(oryukdo_scheduler)": {
+            "luts": 2092,
+            "ff": 2968,
+            "bram_tiles": 0.0
+          },
+          "U_COMPLETION": {
+            "luts": 3539,
+            "ff": 1499,
+            "bram_tiles": 0.0
+          },
+          "U_FRONTIER": {
+            "luts": 10842,
+            "ff": 4080,
+            "bram_tiles": 0.0
+          },
+          "U_IST": {
+            "luts": 7000,
+            "ff": 3654,
+            "bram_tiles": 0.0
+          },
+          "U_MEMORY": {
+            "luts": 6741,
+            "ff": 3989,
+            "bram_tiles": 0.0
+          },
+          "U_NEL": {
+            "luts": 3276,
+            "ff": 1110,
+            "bram_tiles": 0.0
+          },
+          "U_PRM": {
+            "luts": 6431,
+            "ff": 2621,
+            "bram_tiles": 0.0
+          },
+          "U_RS": {
+            "luts": 6150,
+            "ff": 3674,
+            "bram_tiles": 42.0
+          }
+        },
+        "drc": [
+          {
+            "rule": "CHECK-3",
+            "severity": "Warning",
+            "description": "Report rule limit reached",
+            "reported_count": 2
+          },
+          {
+            "rule": "REQP-1839",
+            "severity": "Warning",
+            "description": "RAMB36 async control check",
+            "reported_count": 20
+          },
+          {
+            "rule": "RTSTAT-10",
+            "severity": "Warning",
+            "description": "No routable loads",
+            "reported_count": 1
+          },
+          {
+            "rule": "ZPS7-1",
+            "severity": "Warning",
+            "description": "PS7 block required",
+            "reported_count": 1
+          }
+        ]
+      },
+      "opt": {
+        "wns_ns": -1.291,
+        "tns_ns": -929.215,
+        "setup_failing_endpoints": 1338.0,
+        "setup_total_endpoints": 60832.0,
+        "whs_ns": 0.21,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60832.0,
+        "wpws_ns": 5.893,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25207.0,
+        "timing_met": false,
+        "luts": 45565.0,
+        "ff": 23595.0,
+        "bram_tiles": 42.0,
+        "no_clock": 0,
+        "unconstrained_internal_endpoints": 0,
+        "loops": 0,
+        "latch_loops": 0,
+        "critical_path_and_netlist": {
+          "Latches": "0",
+          "Black boxes": "0",
+          "Setup slack": "-1.291 ns",
+          "Data path delay": "15.198 ns",
+          "Logic levels": "18",
+          "Startpoint": "U_FRONTIER/reason_reg[0]/C",
+          "Endpoint": "U_PRM/GEN_PRM_IST_MAP[1].U_PRM_IST_MAP/reg_mem_reg[51][0]/CE",
+          "Hold slack": "0.210 ns"
+        },
+        "top_level_hierarchy": {
+          "(oryukdo_scheduler)": {
+            "luts": 2066,
+            "ff": 2968,
+            "bram_tiles": 0.0
+          },
+          "U_COMPLETION": {
+            "luts": 3550,
+            "ff": 1499,
+            "bram_tiles": 0.0
+          },
+          "U_FRONTIER": {
+            "luts": 10558,
+            "ff": 4080,
+            "bram_tiles": 0.0
+          },
+          "U_IST": {
+            "luts": 6980,
+            "ff": 3654,
+            "bram_tiles": 0.0
+          },
+          "U_MEMORY": {
+            "luts": 6758,
+            "ff": 3989,
+            "bram_tiles": 0.0
+          },
+          "U_NEL": {
+            "luts": 3262,
+            "ff": 1110,
+            "bram_tiles": 0.0
+          },
+          "U_PRM": {
+            "luts": 6285,
+            "ff": 2621,
+            "bram_tiles": 0.0
+          },
+          "U_RS": {
+            "luts": 6108,
+            "ff": 3674,
+            "bram_tiles": 42.0
+          }
+        },
+        "drc": [
+          {
+            "rule": "CHECK-3",
+            "severity": "Warning",
+            "description": "Report rule limit reached",
+            "reported_count": 1
+          },
+          {
+            "rule": "REQP-1839",
+            "severity": "Warning",
+            "description": "RAMB36 async control check",
+            "reported_count": 20
+          },
+          {
+            "rule": "ZPS7-1",
+            "severity": "Warning",
+            "description": "PS7 block required",
+            "reported_count": 1
+          }
+        ]
+      }
+    },
+    "route": {
+      "routable_nets": 52953,
+      "fully_routed_nets": 52953,
+      "routing_error_nets": 0,
+      "complete": true
+    },
+    "fresh_build_pass": false,
+    "fixed_route_sweep": [
+      {
+        "mhz": 55.0,
+        "period_ns": 18.182,
+        "setup_slack_ns": 2.155,
+        "hold_slack_ns": 0.056,
+        "wns_ns": 2.155,
+        "tns_ns": 0.0,
+        "setup_failing_endpoints": 0.0,
+        "setup_total_endpoints": 60832.0,
+        "whs_ns": 0.056,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60832.0,
+        "wpws_ns": 7.841,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25207.0,
+        "timing_met": true
+      },
+      {
+        "mhz": 62.3,
+        "period_ns": 16.051,
+        "setup_slack_ns": 0.024,
+        "hold_slack_ns": 0.056,
+        "wns_ns": 0.024,
+        "tns_ns": 0.0,
+        "setup_failing_endpoints": 0.0,
+        "setup_total_endpoints": 60832.0,
+        "whs_ns": 0.056,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60832.0,
+        "wpws_ns": 6.775,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25207.0,
+        "timing_met": true
+      },
+      {
+        "mhz": 62.4,
+        "period_ns": 16.026,
+        "setup_slack_ns": -0.001,
+        "hold_slack_ns": 0.056,
+        "wns_ns": -0.001,
+        "tns_ns": -0.002,
+        "setup_failing_endpoints": 3.0,
+        "setup_total_endpoints": 60832.0,
+        "whs_ns": 0.056,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60832.0,
+        "wpws_ns": 6.763,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25207.0,
+        "timing_met": false
+      },
+      {
+        "mhz": 70.0,
+        "period_ns": 14.286,
+        "setup_slack_ns": -1.741,
+        "hold_slack_ns": 0.056,
+        "wns_ns": -1.741,
+        "tns_ns": -7509.706,
+        "setup_failing_endpoints": 10647.0,
+        "setup_total_endpoints": 60832.0,
+        "whs_ns": 0.056,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60832.0,
+        "wpws_ns": 5.893,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25207.0,
+        "timing_met": false
+      },
+      {
+        "mhz": 75.0,
+        "period_ns": 13.333,
+        "setup_slack_ns": -2.694,
+        "hold_slack_ns": 0.056,
+        "wns_ns": -2.694,
+        "tns_ns": -20316.434,
+        "setup_failing_endpoints": 17056.0,
+        "setup_total_endpoints": 60832.0,
+        "whs_ns": 0.056,
+        "ths_ns": 0.0,
+        "hold_failing_endpoints": 0.0,
+        "hold_total_endpoints": 60832.0,
+        "wpws_ns": 5.416,
+        "tpws_ns": 0.0,
+        "pulse_failing_endpoints": 0.0,
+        "pulse_total_endpoints": 25207.0,
+        "timing_met": false
+      }
+    ],
+    "fixed_route_best_measured_mhz": 62.3,
+    "route_complete": true,
+    "functional_netlist_pass": true,
+    "gate_simulation": {
+      "netlist_sha256": "06da140b28044d0ab03752b644f26e0fa88dcd07db162d53cd99a6b7d7cc2923",
+      "bench_sha256": "1f32c0ce96da78317e94fd688fce9fd33d4fc8796f24c76cfa86f08140708e9f",
+      "passed": true,
+      "stages": [
+        {
+          "command": [
+            "D:\\Xilinx2202\\Vivado\\2022.2\\bin\\xvlog.bat",
+            "--sv",
+            "D:\\work_buffer\\esd\\ORYUKDO\\gen2\\build\\oryukdo_memory_completion32_70mhz\\funcsim.v",
+            "D:\\work_buffer\\esd\\ORYUKDO\\gen2\\build\\oryukdo_memory_completion32_70mhz\\gate_sim\\tb.sv"
+          ],
+          "exit": 0
+        },
+        {
+          "command": [
+            "D:\\Xilinx2202\\Vivado\\2022.2\\bin\\xelab.bat",
+            "tb_oryukdo_scheduler",
+            "glbl",
+            "-L",
+            "unisims_ver",
+            "-L",
+            "unimacro_ver",
+            "-s",
+            "gate",
+            "-debug",
+            "off",
+            "-mt",
+            "4"
+          ],
+          "exit": 0
+        },
+        {
+          "command": [
+            "D:\\Xilinx2202\\Vivado\\2022.2\\bin\\xsim.bat",
+            "gate",
+            "-runall"
+          ],
+          "exit": 0
+        }
+      ]
+    },
+    "validated_build_pass": false,
+    "connectivity_audit": [
+      "i_agu_address endpoints=1024",
+      "i_agu_data endpoints=1024",
+      "i_agu_mask endpoints=128",
+      "i_result_data endpoints=320",
+      "i_ex_get endpoints=4598",
+      "o_agu_ready startpoints=2283",
+      "o_result_accept startpoints=1353",
+      "o_wb_valid startpoints=2432",
+      "o_mem_address startpoints=32",
+      "o_mem_data startpoints=32"
+    ],
+    "memory_completion_audit": [
+      "AGU input ports: 113",
+      "Memory processed registers: 32",
+      "AGU-to-processed timing paths: 0",
+      "AGU-to-processed combinational fanout endpoints: 0"
+    ]
+  }
+}

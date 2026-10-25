@@ -1,0 +1,614 @@
+`timescale 1ns/1ps
+module eulsukdo_scheduler #(
+    // Instruction Set Parameters
+    parameter int IS_INST_PC_BITWIDTH                   = 32,
+    parameter int IS_INST_PC_STEP                       = 4,
+    parameter int IS_INST_BITWIDTH                      = 32,
+    parameter int IS_INST_REGS                          = 32,
+    parameter int IS_INST_OPERANDS                      = 2,
+    parameter int IS_INST_IMM                           = 32,
+
+    // Execution Unit Parameters
+    parameter int EX_INST_MICROOP_BITWIDTH              = 5,
+
+    // EULSUKDO Structure Parameters
+    parameter int STRUCT_DECODE_NEW_INST                = 2,
+    parameter int STRUCT_INST_STATE_ENTRIES             = 128,
+    parameter int STRUCT_PHYREGS                        = 64,
+    parameter int STRUCT_EX_PATH                        = 3,
+    parameter int STRUCT_RS_OUT_ENTRY[STRUCT_EX_PATH]   = {1, 3, 1},
+    parameter int STRUCT_EX_CORES                       = 5,
+    parameter int STRUCT_EX_OUT_RESULT[STRUCT_EX_CORES] = {1, 1, 1, 1, 1},
+    parameter int STRUCT_EX_OUT_RESULT_SUM              = 5,
+    parameter int STRUCT_EX_BRANCH                      = 1,
+    parameter int STRUCT_PRM_ENTRY_UPDATE               = 5,
+    parameter int STRUCT_PRM_ENTRY_BUFFER               = 4,
+    parameter int STRUCT_UNALLOCATE_PHYREG              = 4,
+    parameter int STRUCT_FLOW_WINDOWS                   = 8,
+    parameter int STRUCT_FLOW_PC_MAX_RANGE              = 16,
+
+    // Wakeup bandwidth, stored-instruction issue bandwidth and SRAM banking
+    // are independent. Banks use low entry-number bits (power of two).
+    parameter int STRUCT_IST_ISSUE_WIDTH               = STRUCT_EX_CORES,
+    parameter int STRUCT_IST_BANKS                     = 1 << $clog2(
+        (STRUCT_DECODE_NEW_INST > STRUCT_IST_ISSUE_WIDTH) ? STRUCT_DECODE_NEW_INST : STRUCT_IST_ISSUE_WIDTH),
+
+    // Minimum instruction capacity per RS EX-path FIFO (not data bit width).
+    parameter int STRUCT_RS_FIFO_WIDTH                = 128,
+
+    // Optional serialized LD/ST ordering. All instructions on this EX path
+    // participate; completion must include stores (rd=0) in the WBC results.
+    parameter bit ENABLE_LSQ                          = 1'b0,
+    parameter int STRUCT_LSQ_ENTRIES                  = 32,
+    parameter int STRUCT_LSQ_EX_PATH                  = 2,
+
+    // Synthesis Create Local Parameters
+    localparam int _BITWIDTH_IS_INST_REGS               = $clog2(IS_INST_REGS),
+    localparam int _BITWIDTH_STRUCT_INST_STATE_ENTRIES  = $clog2(STRUCT_INST_STATE_ENTRIES),
+    localparam int _BITWIDTH_STRUCT_PHYREGS             = $clog2(STRUCT_PHYREGS),
+    localparam int _BITWIDTH_STRUCT_EX_PATH             = $clog2(STRUCT_EX_PATH),
+    localparam int _BITWIDTH_STRUCT_FLOW_WINDOWS        = (STRUCT_FLOW_WINDOWS > 1)? $clog2(STRUCT_FLOW_WINDOWS) : 1,
+    localparam int _BITWIDTH_READY_PRM                  = _BITWIDTH_STRUCT_INST_STATE_ENTRIES+_BITWIDTH_STRUCT_PHYREGS,
+    localparam int _BITWIDTH_FLOW_WINDOWS_PC            = _BITWIDTH_STRUCT_FLOW_WINDOWS
+                                                         + IS_INST_PC_BITWIDTH,
+    localparam int _BITWIDTH_INTERNAL_INST_WIDTH        = _BITWIDTH_STRUCT_FLOW_WINDOWS
+                                                         + IS_INST_PC_BITWIDTH
+                                                         + _BITWIDTH_STRUCT_EX_PATH
+                                                         + EX_INST_MICROOP_BITWIDTH
+                                                         + IS_INST_IMM
+                                                         + _BITWIDTH_STRUCT_PHYREGS // rd
+                                                         + (_BITWIDTH_STRUCT_PHYREGS * IS_INST_OPERANDS) // rs1..n
+                                                         + IS_INST_OPERANDS, // Ready1..n
+    localparam int _BITWIDTH_EX_INST_WIDTH              = _BITWIDTH_STRUCT_FLOW_WINDOWS
+                                                         + IS_INST_PC_BITWIDTH
+                                                         + _BITWIDTH_STRUCT_EX_PATH
+                                                         + EX_INST_MICROOP_BITWIDTH
+                                                         + IS_INST_IMM
+                                                         + _BITWIDTH_STRUCT_PHYREGS // rd
+                                                         + (_BITWIDTH_STRUCT_PHYREGS * IS_INST_OPERANDS), // rs1..n
+    localparam int _BITWIDTH_EX_RESULT_WIDTH            = _BITWIDTH_STRUCT_FLOW_WINDOWS
+                                                         + IS_INST_PC_BITWIDTH
+                                                         + _BITWIDTH_STRUCT_PHYREGS, // rd
+    localparam int _BITWIDTH_STRUCT_RETIRED_PHYREG_MSG  = _BITWIDTH_STRUCT_FLOW_WINDOWS
+                                                         + IS_INST_PC_BITWIDTH
+                                                         + _BITWIDTH_STRUCT_PHYREGS, // Retired Register
+    localparam int _BITWIDTH_STRUCT_JUMP_BRANCH_INFO    = 1 // Jump Flag
+                                                         + 1 // Jump Register Flag
+                                                         + 1 // Branch Flag
+                                                         + IS_INST_PC_BITWIDTH, // New Program Counter
+    localparam int _BITWIDTH_STRUCT_BRANCH_RESULT      = IS_INST_PC_BITWIDTH+_BITWIDTH_FLOW_WINDOWS_PC,
+    localparam int _BITWIDTH_STRUCT_EX_DONE_PC          = _BITWIDTH_STRUCT_FLOW_WINDOWS
+                                                         + IS_INST_PC_BITWIDTH
+) (
+    input  wire                                                                              clk,
+    input  wire                                                                              reset_n,
+
+    // PC Request
+    output wire [STRUCT_DECODE_NEW_INST-1:0]                                                 o_im_req_pc_valid,
+    input  wire [STRUCT_DECODE_NEW_INST-1:0]                                                 i_im_req_pc_get,
+    output wire [(STRUCT_DECODE_NEW_INST * _BITWIDTH_FLOW_WINDOWS_PC)-1:0]                   o_im_req_pc,
+    
+    // Instruction Receive
+    input  wire [STRUCT_DECODE_NEW_INST-1:0]                                                 i_im_recv_inst_valid,
+    output wire [STRUCT_DECODE_NEW_INST-1:0]                                                 o_im_recv_inst_get,
+    input  wire [(STRUCT_DECODE_NEW_INST * _BITWIDTH_FLOW_WINDOWS_PC)-1:0]                   i_im_recv_pc,
+    input  wire [(STRUCT_DECODE_NEW_INST * IS_INST_BITWIDTH)-1:0]                            i_im_recv_inst,
+    
+    // Decoder Info Receive
+    input  wire [STRUCT_DECODE_NEW_INST-1:0]                                                 i_nel_decode_exception,
+    input  wire [(STRUCT_DECODE_NEW_INST *(_BITWIDTH_STRUCT_EX_PATH) )-1:0]                  i_nel_decode_expath,
+    input  wire [(STRUCT_DECODE_NEW_INST *(EX_INST_MICROOP_BITWIDTH) )-1:0]                  i_nel_decode_microop,
+    input  wire [(STRUCT_DECODE_NEW_INST *(_BITWIDTH_IS_INST_REGS) )-1:0]                    i_nel_decode_rd,
+    input  wire [STRUCT_DECODE_NEW_INST-1:0]                                                 i_nel_decode_newreg,
+    input  wire [((STRUCT_DECODE_NEW_INST*IS_INST_OPERANDS) *(_BITWIDTH_IS_INST_REGS) )-1:0] i_nel_decode_rs,
+    input  wire [(STRUCT_DECODE_NEW_INST *(IS_INST_IMM) )-1:0]                               i_nel_decode_imm,
+    input  wire [STRUCT_DECODE_NEW_INST-1:0]                                                 i_nel_decode_jump,
+    input  wire [STRUCT_DECODE_NEW_INST-1:0]                                                 i_nel_decode_jump_reg,
+    input  wire [STRUCT_DECODE_NEW_INST-1:0]                                                 i_nel_decode_branch,
+    
+    // EX Inst Push (RS Out)
+    output wire [STRUCT_EX_CORES-1:0]                                                        o_rs_entry_valid,
+    input  wire [STRUCT_EX_CORES-1:0]                                                        i_rs_entry_get,
+    output wire [(STRUCT_EX_CORES *(_BITWIDTH_EX_INST_WIDTH) )-1:0]                          o_rs_entry_data,
+
+    // EX Result Receive (EX Out)
+    input  wire [STRUCT_EX_OUT_RESULT_SUM-1:0]                                               i_wbc_result_valid,
+    input  wire [(STRUCT_EX_OUT_RESULT_SUM *(_BITWIDTH_EX_RESULT_WIDTH) )-1:0]               i_wbc_result_data,
+    // Branch EX must report the resolved next PC and the originating {Flow, PC}.
+    input wire [STRUCT_EX_BRANCH-1:0] i_wbc_result_branch_valid,
+    input wire [STRUCT_EX_BRANCH*_BITWIDTH_STRUCT_BRANCH_RESULT-1:0] i_wbc_result_branch_data
+);
+
+// START ===[ INTERNAL WIRE AREA ]=== START //
+    // IM -> NEL : Instruction Receive
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         im_nel_recv_inst_valid;
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         im_nel_recv_inst_get;
+    wire [(STRUCT_DECODE_NEW_INST *(_BITWIDTH_FLOW_WINDOWS_PC) )-1:0]                         im_nel_recv_pc;
+
+    // PRM -> NEL : Allocatable Physical Registers
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         prm_nel_phyreg_valid;
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         prm_nel_phyreg_get;
+    wire [(STRUCT_DECODE_NEW_INST *(_BITWIDTH_STRUCT_PHYREGS) )-1:0]                          prm_nel_phyreg_data;
+
+    // WBC -> NEL, PRM (Broadcast) : Done Physical Registers
+    wire [STRUCT_EX_OUT_RESULT_SUM-1:0]                                                       wbc_broadcast_done_phyreg_valid;
+    wire [(STRUCT_EX_OUT_RESULT_SUM *(_BITWIDTH_STRUCT_PHYREGS) )-1:0]                        wbc_broadcast_done_phyreg_data;
+
+    // NEL -> IST : New Internal Instructions
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         nel_ist_new_inst_valid;
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         nel_ist_new_inst_get;
+    wire [(STRUCT_DECODE_NEW_INST *(_BITWIDTH_INTERNAL_INST_WIDTH) )-1:0]                     nel_ist_new_inst_data;
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         ist_nel_accept;
+    wire                                                                                     lsq_order_ready;
+
+    // NEL -> FCL : Retired Physical Registers
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         nel_fcl_retired_phyreg_valid;
+    wire [(STRUCT_DECODE_NEW_INST *(_BITWIDTH_STRUCT_RETIRED_PHYREG_MSG) )-1:0]               nel_fcl_retired_phyreg_data;
+    
+    // NEL -> FCL : Jump/Branch Information
+    wire                                                                                      nel_fcl_jumpbranch_valid;
+    wire [_BITWIDTH_STRUCT_JUMP_BRANCH_INFO-1:0]                                              nel_fcl_jumpbranch_data;
+
+    // PRM -> IST : Ready Phyreg/ISTmap pair
+    wire [STRUCT_PRM_ENTRY_UPDATE-1:0]                                                        prm_ist_ready_phyreg_valid;
+    wire [(STRUCT_PRM_ENTRY_UPDATE *(_BITWIDTH_READY_PRM) )-1:0]                              prm_ist_ready_phyreg_data;
+
+    // IST -> RS : Executable (All phyreg in instruction are ready) Internal Instructions
+    wire [(STRUCT_DECODE_NEW_INST+STRUCT_IST_ISSUE_WIDTH)-1:0]                               ist_rs_ready_inst_valid;
+    wire [(STRUCT_DECODE_NEW_INST+STRUCT_IST_ISSUE_WIDTH)-1:0]                               ist_rs_ready_inst_get;
+    wire [((STRUCT_DECODE_NEW_INST+STRUCT_IST_ISSUE_WIDTH) *(_BITWIDTH_EX_INST_WIDTH) )-1:0] ist_rs_ready_inst_data;
+
+    // IST -> PRM : Wait Phyreg/ISTmap pair
+    wire [(STRUCT_DECODE_NEW_INST*IS_INST_OPERANDS)-1:0]                                      ist_prm_wait_phyreg_valid;
+    wire [(STRUCT_DECODE_NEW_INST*IS_INST_OPERANDS*(_BITWIDTH_READY_PRM))-1:0]                ist_prm_wait_phyreg_data;
+
+    // RS -> EX : Wait EX Instructions
+    wire [STRUCT_EX_CORES-1:0]                                                                rs_ex_wait_inst_valid;
+    wire [STRUCT_EX_CORES-1:0]                                                                rs_ex_wait_inst_get;
+    wire [(STRUCT_EX_CORES *(_BITWIDTH_EX_INST_WIDTH) )-1:0]                                  rs_ex_wait_inst_data;
+
+    // EX -> WBC : Done EX Branch Result
+    wire [STRUCT_EX_BRANCH-1:0]                                                               ex_wbc_result_branch_valid;
+    wire [(STRUCT_EX_BRANCH *(_BITWIDTH_STRUCT_BRANCH_RESULT) )-1:0]                       ex_wbc_result_branch_data;
+    
+    // EX -> WBC : Done EX Phyreg Result
+    wire [STRUCT_EX_OUT_RESULT_SUM-1:0]                                                       ex_wbc_result_valid;
+    wire [(STRUCT_EX_OUT_RESULT_SUM *(_BITWIDTH_EX_RESULT_WIDTH) )-1:0]                       ex_wbc_result_data;
+    
+    // WBC -> FCL : Branch Result
+    wire [STRUCT_EX_BRANCH-1:0]                                                               wbc_fcl_branch_valid;
+    wire [(STRUCT_EX_BRANCH *(_BITWIDTH_STRUCT_BRANCH_RESULT) )-1:0]                       wbc_fcl_branch_data;
+    
+    // WBC -> FCL : Done PC
+    wire [STRUCT_EX_OUT_RESULT_SUM-1:0]                                                       wbc_fcl_done_pc_valid;
+    wire [(STRUCT_EX_OUT_RESULT_SUM *(_BITWIDTH_STRUCT_EX_DONE_PC) )-1:0]                     wbc_fcl_done_pc_data;
+
+    // FCL -> IM : New PC Request
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         fcl_im_req_pc_valid;
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         fcl_im_req_pc_get;
+    wire [(STRUCT_DECODE_NEW_INST *_BITWIDTH_FLOW_WINDOWS_PC)-1:0]                             fcl_im_req_pc;
+
+    // FCL -> PRM : Unallocate Retired Registers
+    wire [STRUCT_UNALLOCATE_PHYREG-1:0]                                                       fcl_prm_unallocate_phyreg_valid;
+    wire [(STRUCT_UNALLOCATE_PHYREG *(_BITWIDTH_STRUCT_PHYREGS) )-1:0]                        fcl_prm_unallocate_phyreg_data;
+
+    // DECODER -> NEL : ISA Infomation
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         dec_nel_decode_exception;
+    wire [(STRUCT_DECODE_NEW_INST *(_BITWIDTH_STRUCT_EX_PATH) )-1:0]                          dec_nel_decode_expath;
+    wire [(STRUCT_DECODE_NEW_INST *(EX_INST_MICROOP_BITWIDTH) )-1:0]                          dec_nel_decode_microop;
+    wire [(STRUCT_DECODE_NEW_INST *(_BITWIDTH_IS_INST_REGS) )-1:0]                            dec_nel_decode_rd;
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         dec_nel_decode_newreg;
+    wire [((STRUCT_DECODE_NEW_INST*IS_INST_OPERANDS) *(_BITWIDTH_IS_INST_REGS) )-1:0]         dec_nel_decode_rs;
+    wire [(STRUCT_DECODE_NEW_INST *(IS_INST_IMM) )-1:0]                                       dec_nel_decode_imm;
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         dec_nel_decode_jump;
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         dec_nel_decode_jump_reg;
+    wire [STRUCT_DECODE_NEW_INST-1:0]                                                         dec_nel_decode_branch;
+
+    wire fcl_nel_discard, nel_fcl_recv_control;
+    wire [STRUCT_DECODE_NEW_INST-1:0] nel_fcl_recv_valid, nel_fcl_recv_keep, nel_fcl_new_inst_valid;
+    wire [STRUCT_DECODE_NEW_INST*_BITWIDTH_FLOW_WINDOWS_PC-1:0] nel_fcl_new_inst_pc;
+    wire [_BITWIDTH_FLOW_WINDOWS_PC-1:0] nel_fcl_jumpbranch_pc;
+
+// END   ===[ INTERNAL WIRE AREA ]===   END //
+
+// START ===[ INSTANCE AREA ]=== START //
+    new_entry_logic #(
+        .IS_INST_PC_BITWIDTH(IS_INST_PC_BITWIDTH),
+        .IS_INST_PC_STEP(IS_INST_PC_STEP),
+        .IS_INST_BITWIDTH(IS_INST_BITWIDTH),
+        .IS_INST_REGS(IS_INST_REGS),
+        .IS_INST_OPERANDS(IS_INST_OPERANDS),
+        .IS_INST_IMM(IS_INST_IMM),
+        .EX_INST_MICROOP_BITWIDTH(EX_INST_MICROOP_BITWIDTH),
+        .STRUCT_DECODE_NEW_INST(STRUCT_DECODE_NEW_INST),
+        .STRUCT_INST_STATE_ENTRIES(STRUCT_INST_STATE_ENTRIES),
+        .STRUCT_PHYREGS(STRUCT_PHYREGS),
+        .STRUCT_EX_PATH(STRUCT_EX_PATH),
+        .STRUCT_RS_OUT_ENTRY(STRUCT_RS_OUT_ENTRY),
+        .STRUCT_EX_CORES(STRUCT_EX_CORES),
+        .STRUCT_EX_OUT_RESULT(STRUCT_EX_OUT_RESULT),
+        .STRUCT_EX_OUT_RESULT_SUM(STRUCT_EX_OUT_RESULT_SUM),
+        .STRUCT_EX_BRANCH(STRUCT_EX_BRANCH),
+        .STRUCT_PRM_ENTRY_UPDATE(STRUCT_PRM_ENTRY_UPDATE),
+        .STRUCT_PRM_ENTRY_BUFFER(STRUCT_PRM_ENTRY_BUFFER),
+        .STRUCT_UNALLOCATE_PHYREG(STRUCT_UNALLOCATE_PHYREG),
+        .STRUCT_FLOW_WINDOWS(STRUCT_FLOW_WINDOWS),
+        .STRUCT_FLOW_PC_MAX_RANGE(STRUCT_FLOW_PC_MAX_RANGE)
+    ) U_NEW_ENTRY_LOGIC (
+        .clk                            (clk),
+        .reset_n                        (reset_n),
+
+        // Instruction Input (IM)
+        .i_im_recv_inst_valid           (im_nel_recv_inst_valid),
+        .o_im_recv_inst_get             (im_nel_recv_inst_get),
+        .i_im_recv_pc                   (im_nel_recv_pc),
+        .i_fcl_discard                  (fcl_nel_discard),
+        .o_fcl_recv_valid               (nel_fcl_recv_valid),
+        .o_fcl_recv_keep                (nel_fcl_recv_keep),
+        .o_fcl_recv_control             (nel_fcl_recv_control),
+        .o_fcl_new_inst_valid           (nel_fcl_new_inst_valid),
+        .o_fcl_new_inst_pc              (nel_fcl_new_inst_pc),
+
+        // Allocate Physical Registers Input (PRM)
+        .i_prm_phyreg_valid             (prm_nel_phyreg_valid),
+        .o_prm_phyreg_get               (prm_nel_phyreg_get),
+        .i_prm_phyreg_data              (prm_nel_phyreg_data),
+
+        // Done Physical Registers Input (WBC)
+        .i_wbc_done_phyreg_valid        (wbc_broadcast_done_phyreg_valid),
+        .i_wbc_done_phyreg_data         (wbc_broadcast_done_phyreg_data),
+
+        // Decoder Input (Decoder)
+        .i_dec_decode_exception         (dec_nel_decode_exception),
+        .i_dec_decode_expath            (dec_nel_decode_expath),
+        .i_dec_decode_microop           (dec_nel_decode_microop),
+        .i_dec_decode_rd                (dec_nel_decode_rd),
+        .i_dec_decode_newreg            (dec_nel_decode_newreg),
+        .i_dec_decode_rs                (dec_nel_decode_rs),
+        .i_dec_decode_imm               (dec_nel_decode_imm),
+        .i_dec_decode_jump              (dec_nel_decode_jump),
+        .i_dec_decode_jump_reg          (dec_nel_decode_jump_reg),
+        .i_dec_decode_branch            (dec_nel_decode_branch),
+
+        // Create Internal Instruction Output (IST)
+        .o_ist_new_inst_valid           (nel_ist_new_inst_valid),
+        .i_ist_new_inst_get             (nel_ist_new_inst_get),
+        .o_ist_new_inst_data            (nel_ist_new_inst_data),
+
+        // Retired Physical Registers Output (FCL)
+        .o_fcl_retired_phyreg_valid     (nel_fcl_retired_phyreg_valid),
+        .o_fcl_retired_phyreg_data      (nel_fcl_retired_phyreg_data),
+
+        // Jump/Branch Information Output (FCL)
+        .o_fcl_jumpbranch_valid         (nel_fcl_jumpbranch_valid),
+        .o_fcl_jumpbranch_data          (nel_fcl_jumpbranch_data),
+        .o_fcl_jumpbranch_pc            (nel_fcl_jumpbranch_pc)
+    );
+
+    instruction_state_table #(
+        .IS_INST_PC_BITWIDTH(IS_INST_PC_BITWIDTH),
+        .IS_INST_PC_STEP(IS_INST_PC_STEP),
+        .IS_INST_BITWIDTH(IS_INST_BITWIDTH),
+        .IS_INST_REGS(IS_INST_REGS),
+        .IS_INST_OPERANDS(IS_INST_OPERANDS),
+        .IS_INST_IMM(IS_INST_IMM),
+        .EX_INST_MICROOP_BITWIDTH(EX_INST_MICROOP_BITWIDTH),
+        .STRUCT_DECODE_NEW_INST(STRUCT_DECODE_NEW_INST),
+        .STRUCT_INST_STATE_ENTRIES(STRUCT_INST_STATE_ENTRIES),
+        .STRUCT_PHYREGS(STRUCT_PHYREGS),
+        .STRUCT_EX_PATH(STRUCT_EX_PATH),
+        .STRUCT_RS_OUT_ENTRY(STRUCT_RS_OUT_ENTRY),
+        .STRUCT_EX_CORES(STRUCT_EX_CORES),
+        .STRUCT_EX_OUT_RESULT(STRUCT_EX_OUT_RESULT),
+        .STRUCT_EX_OUT_RESULT_SUM(STRUCT_EX_OUT_RESULT_SUM),
+        .STRUCT_EX_BRANCH(STRUCT_EX_BRANCH),
+        .STRUCT_PRM_ENTRY_UPDATE(STRUCT_PRM_ENTRY_UPDATE),
+        .STRUCT_IST_ISSUE_WIDTH(STRUCT_IST_ISSUE_WIDTH),
+        .STRUCT_IST_BANKS(STRUCT_IST_BANKS),
+        .STRUCT_PRM_ENTRY_BUFFER(STRUCT_PRM_ENTRY_BUFFER),
+        .STRUCT_UNALLOCATE_PHYREG(STRUCT_UNALLOCATE_PHYREG),
+        .STRUCT_FLOW_WINDOWS(STRUCT_FLOW_WINDOWS),
+        .STRUCT_FLOW_PC_MAX_RANGE(STRUCT_FLOW_PC_MAX_RANGE)
+    ) U_INSTRUCTION_STATE_TABLE (
+        .clk                            (clk),
+        .reset_n                        (reset_n),
+
+        // New Internal Instruction Input (NEL)
+        .i_nel_new_inst_valid           (nel_ist_new_inst_valid),
+        .o_nel_new_inst_get             (ist_nel_accept),
+        .i_nel_new_inst_data            (nel_ist_new_inst_data),
+
+        // Ready Physical Registers Input (PRM)
+        .i_prm_ready_phyreg_valid       (prm_ist_ready_phyreg_valid), 
+        .i_prm_ready_phyreg_data        (prm_ist_ready_phyreg_data), 
+        
+        // Executable (All phyreg in instruction are ready) Internal Instruction Output (RS)
+        .o_rs_ready_inst_valid          (ist_rs_ready_inst_valid),
+        .i_rs_ready_inst_get            (ist_rs_ready_inst_get),
+        .o_rs_ready_inst_data           (ist_rs_ready_inst_data),
+
+        // Wait Physical Registers Output (PRM)
+        .o_prm_wait_phyreg_valid        (ist_prm_wait_phyreg_valid),
+        .o_prm_wait_phyreg_data         (ist_prm_wait_phyreg_data)
+    );
+
+    ready_station #(
+        .IS_INST_PC_BITWIDTH(IS_INST_PC_BITWIDTH),
+        .IS_INST_PC_STEP(IS_INST_PC_STEP),
+        .IS_INST_BITWIDTH(IS_INST_BITWIDTH),
+        .IS_INST_REGS(IS_INST_REGS),
+        .IS_INST_OPERANDS(IS_INST_OPERANDS),
+        .IS_INST_IMM(IS_INST_IMM),
+        .EX_INST_MICROOP_BITWIDTH(EX_INST_MICROOP_BITWIDTH),
+        .STRUCT_DECODE_NEW_INST(STRUCT_DECODE_NEW_INST),
+        .STRUCT_INST_STATE_ENTRIES(STRUCT_INST_STATE_ENTRIES),
+        .STRUCT_PHYREGS(STRUCT_PHYREGS),
+        .STRUCT_EX_PATH(STRUCT_EX_PATH),
+        .STRUCT_RS_OUT_ENTRY(STRUCT_RS_OUT_ENTRY),
+        .STRUCT_RS_FIFO_WIDTH(STRUCT_RS_FIFO_WIDTH),
+        .STRUCT_EX_CORES(STRUCT_EX_CORES),
+        .STRUCT_EX_OUT_RESULT(STRUCT_EX_OUT_RESULT),
+        .STRUCT_EX_OUT_RESULT_SUM(STRUCT_EX_OUT_RESULT_SUM),
+        .STRUCT_EX_BRANCH(STRUCT_EX_BRANCH),
+        .STRUCT_PRM_ENTRY_UPDATE(STRUCT_PRM_ENTRY_UPDATE),
+        .STRUCT_IST_ISSUE_WIDTH(STRUCT_IST_ISSUE_WIDTH),
+        .STRUCT_IST_BANKS(STRUCT_IST_BANKS),
+        .STRUCT_PRM_ENTRY_BUFFER(STRUCT_PRM_ENTRY_BUFFER),
+        .STRUCT_UNALLOCATE_PHYREG(STRUCT_UNALLOCATE_PHYREG),
+        .STRUCT_FLOW_WINDOWS(STRUCT_FLOW_WINDOWS),
+        .STRUCT_FLOW_PC_MAX_RANGE(STRUCT_FLOW_PC_MAX_RANGE)
+    ) U_READY_STATION (
+        .clk                            (clk),
+        .reset_n                        (reset_n),
+
+        // Executable (All phyreg in instruction are ready) Internal Instruction Input (IST)
+        .i_ist_ready_inst_valid         (ist_rs_ready_inst_valid),
+        .o_ist_ready_inst_get           (ist_rs_ready_inst_get),
+        .i_ist_ready_inst_data          (ist_rs_ready_inst_data),
+
+        // Wait EX Instruction Output (EX)
+        .o_ex_wait_inst_valid           (rs_ex_wait_inst_valid),
+        .i_ex_wait_inst_get             (rs_ex_wait_inst_get),
+        .o_ex_wait_inst_data            (rs_ex_wait_inst_data)
+    );
+
+    write_back_concatenation #(
+        .IS_INST_PC_BITWIDTH(IS_INST_PC_BITWIDTH),
+        .IS_INST_PC_STEP(IS_INST_PC_STEP),
+        .IS_INST_BITWIDTH(IS_INST_BITWIDTH),
+        .IS_INST_REGS(IS_INST_REGS),
+        .IS_INST_OPERANDS(IS_INST_OPERANDS),
+        .IS_INST_IMM(IS_INST_IMM),
+        .EX_INST_MICROOP_BITWIDTH(EX_INST_MICROOP_BITWIDTH),
+        .STRUCT_DECODE_NEW_INST(STRUCT_DECODE_NEW_INST),
+        .STRUCT_INST_STATE_ENTRIES(STRUCT_INST_STATE_ENTRIES),
+        .STRUCT_PHYREGS(STRUCT_PHYREGS),
+        .STRUCT_EX_PATH(STRUCT_EX_PATH),
+        .STRUCT_RS_OUT_ENTRY(STRUCT_RS_OUT_ENTRY),
+        .STRUCT_EX_CORES(STRUCT_EX_CORES),
+        .STRUCT_EX_OUT_RESULT(STRUCT_EX_OUT_RESULT),
+        .STRUCT_EX_OUT_RESULT_SUM(STRUCT_EX_OUT_RESULT_SUM),
+        .STRUCT_EX_BRANCH(STRUCT_EX_BRANCH),
+        .STRUCT_PRM_ENTRY_UPDATE(STRUCT_PRM_ENTRY_UPDATE),
+        .STRUCT_PRM_ENTRY_BUFFER(STRUCT_PRM_ENTRY_BUFFER),
+        .STRUCT_UNALLOCATE_PHYREG(STRUCT_UNALLOCATE_PHYREG),
+        .STRUCT_FLOW_WINDOWS(STRUCT_FLOW_WINDOWS),
+        .STRUCT_FLOW_PC_MAX_RANGE(STRUCT_FLOW_PC_MAX_RANGE)
+    ) U_WRITE_BACK_CONCATENATION (
+        // Result branch EX Input (EX)
+        .i_ex_result_branch_valid       (ex_wbc_result_branch_valid),
+        .i_ex_result_branch_data        (ex_wbc_result_branch_data),
+
+        // Result EX Input (EX)
+        .i_ex_result_valid              (ex_wbc_result_valid),
+        .i_ex_result_data               (ex_wbc_result_data),
+
+        // Branch Result Output (FCL)
+        .o_fcl_branch_valid             (wbc_fcl_branch_valid),
+        .o_fcl_branch_data              (wbc_fcl_branch_data),
+
+        // Done PC Output (FCL)
+        .o_fcl_done_pc_valid            (wbc_fcl_done_pc_valid),
+        .o_fcl_done_pc_data             (wbc_fcl_done_pc_data),
+
+        // Broadcast Done phyreg Output (NEL, PRM)
+        .o_broadcast_done_phyreg_valid  (wbc_broadcast_done_phyreg_valid),
+        .o_broadcast_done_phyreg_data   (wbc_broadcast_done_phyreg_data)
+    );
+
+    flow_control_logic #(
+        .IS_INST_PC_BITWIDTH(IS_INST_PC_BITWIDTH),
+        .IS_INST_PC_STEP(IS_INST_PC_STEP),
+        .IS_INST_BITWIDTH(IS_INST_BITWIDTH),
+        .IS_INST_REGS(IS_INST_REGS),
+        .IS_INST_OPERANDS(IS_INST_OPERANDS),
+        .IS_INST_IMM(IS_INST_IMM),
+        .EX_INST_MICROOP_BITWIDTH(EX_INST_MICROOP_BITWIDTH),
+        .STRUCT_DECODE_NEW_INST(STRUCT_DECODE_NEW_INST),
+        .STRUCT_INST_STATE_ENTRIES(STRUCT_INST_STATE_ENTRIES),
+        .STRUCT_PHYREGS(STRUCT_PHYREGS),
+        .STRUCT_EX_PATH(STRUCT_EX_PATH),
+        .STRUCT_RS_OUT_ENTRY(STRUCT_RS_OUT_ENTRY),
+        .STRUCT_EX_CORES(STRUCT_EX_CORES),
+        .STRUCT_EX_OUT_RESULT(STRUCT_EX_OUT_RESULT),
+        .STRUCT_EX_OUT_RESULT_SUM(STRUCT_EX_OUT_RESULT_SUM),
+        .STRUCT_EX_BRANCH(STRUCT_EX_BRANCH),
+        .STRUCT_PRM_ENTRY_UPDATE(STRUCT_PRM_ENTRY_UPDATE),
+        .STRUCT_PRM_ENTRY_BUFFER(STRUCT_PRM_ENTRY_BUFFER),
+        .STRUCT_UNALLOCATE_PHYREG(STRUCT_UNALLOCATE_PHYREG),
+        .STRUCT_FLOW_WINDOWS(STRUCT_FLOW_WINDOWS),
+        .STRUCT_FLOW_PC_MAX_RANGE(STRUCT_FLOW_PC_MAX_RANGE)
+    ) U_FLOW_CONTROL_LOGIC (
+        .clk                            (clk),
+        .reset_n                        (reset_n),
+        
+        // Done PC Input (WBC)
+        .i_wbc_done_pc_valid            (wbc_fcl_done_pc_valid),
+        .i_wbc_done_pc_data             (wbc_fcl_done_pc_data),
+        
+        // Jump/Branch Information Input (NEL)
+        .i_nel_jumpbranch_valid         (nel_fcl_jumpbranch_valid),
+        .i_nel_jumpbranch_data          (nel_fcl_jumpbranch_data),
+        .i_nel_jumpbranch_pc            (nel_fcl_jumpbranch_pc),
+        .i_nel_recv_valid               (nel_fcl_recv_valid),
+        .i_nel_recv_keep                (nel_fcl_recv_keep),
+        .i_nel_recv_control             (nel_fcl_recv_control),
+        .o_nel_discard                  (fcl_nel_discard),
+        .i_nel_new_inst_valid           (nel_fcl_new_inst_valid),
+        .i_nel_new_inst_pc              (nel_fcl_new_inst_pc),
+        .i_wbc_branch_valid             (wbc_fcl_branch_valid),
+        .i_wbc_branch_data              (wbc_fcl_branch_data),
+
+        // Retired Physical Registers Input (NEL)
+        .i_nel_retired_phyreg_valid     (nel_fcl_retired_phyreg_valid),
+        .i_nel_retired_phyreg_data      (nel_fcl_retired_phyreg_data),
+
+        // Request New Instruction Output (IM)
+        .o_im_req_pc_valid              (fcl_im_req_pc_valid),
+        .i_im_req_pc_get                (fcl_im_req_pc_get),
+        .o_im_req_pc                    (fcl_im_req_pc),
+
+        // Unallocate Retired Registers Output (PRM)
+        .o_prm_unallocate_phyreg_valid  (fcl_prm_unallocate_phyreg_valid),
+        .o_prm_unallocate_phyreg_data   (fcl_prm_unallocate_phyreg_data)
+    );
+
+    physical_register_mapper #(
+        .IS_INST_PC_BITWIDTH(IS_INST_PC_BITWIDTH),
+        .IS_INST_PC_STEP(IS_INST_PC_STEP),
+        .IS_INST_BITWIDTH(IS_INST_BITWIDTH),
+        .IS_INST_REGS(IS_INST_REGS),
+        .IS_INST_OPERANDS(IS_INST_OPERANDS),
+        .IS_INST_IMM(IS_INST_IMM),
+        .EX_INST_MICROOP_BITWIDTH(EX_INST_MICROOP_BITWIDTH),
+        .STRUCT_DECODE_NEW_INST(STRUCT_DECODE_NEW_INST),
+        .STRUCT_INST_STATE_ENTRIES(STRUCT_INST_STATE_ENTRIES),
+        .STRUCT_PHYREGS(STRUCT_PHYREGS),
+        .STRUCT_EX_PATH(STRUCT_EX_PATH),
+        .STRUCT_RS_OUT_ENTRY(STRUCT_RS_OUT_ENTRY),
+        .STRUCT_EX_CORES(STRUCT_EX_CORES),
+        .STRUCT_EX_OUT_RESULT(STRUCT_EX_OUT_RESULT),
+        .STRUCT_EX_OUT_RESULT_SUM(STRUCT_EX_OUT_RESULT_SUM),
+        .STRUCT_EX_BRANCH(STRUCT_EX_BRANCH),
+        .STRUCT_PRM_ENTRY_UPDATE(STRUCT_PRM_ENTRY_UPDATE),
+        .STRUCT_PRM_ENTRY_BUFFER(STRUCT_PRM_ENTRY_BUFFER),
+        .STRUCT_UNALLOCATE_PHYREG(STRUCT_UNALLOCATE_PHYREG),
+        .STRUCT_FLOW_WINDOWS(STRUCT_FLOW_WINDOWS),
+        .STRUCT_FLOW_PC_MAX_RANGE(STRUCT_FLOW_PC_MAX_RANGE)
+    ) U_PHYSICAL_REGISTER_MAPPER (
+        .clk                            (clk),
+        .reset_n                        (reset_n),
+
+        // Wait Physical Registers Input (IST)
+        .i_ist_wait_phyreg_valid        (ist_prm_wait_phyreg_valid),
+        .i_ist_wait_phyreg_data         (ist_prm_wait_phyreg_data),
+        
+        // Broadcast Done phyreg Input (WBC)
+        .i_wbc_done_phyreg_valid        (wbc_broadcast_done_phyreg_valid),
+        .i_wbc_done_phyreg_data         (wbc_broadcast_done_phyreg_data),
+
+        // Unallocate Retired Registers Input (FCL)
+        .i_fcl_unallocate_phyreg_valid  (fcl_prm_unallocate_phyreg_valid),
+        .i_fcl_unallocate_phyreg_data   (fcl_prm_unallocate_phyreg_data),
+
+        // Allocate Physical Registers Output (NEL)
+        .o_nel_phyreg_valid             (prm_nel_phyreg_valid),
+        .i_nel_phyreg_get               (prm_nel_phyreg_get),
+        .o_nel_phyreg_data              (prm_nel_phyreg_data),
+
+        // Ready Physical Registers Output (IST)
+        .o_ist_ready_phyreg_valid       (prm_ist_ready_phyreg_valid), 
+        .o_ist_ready_phyreg_data        (prm_ist_ready_phyreg_data)
+    );
+
+// END   ===[ INSTANCE AREA ]===   END //
+
+// START ===[ INPUT, OUTPUT AREA ]=== START //
+    // PC Request Output
+    assign o_im_req_pc_valid          = fcl_im_req_pc_valid;
+    assign fcl_im_req_pc_get          = i_im_req_pc_get;
+    assign o_im_req_pc                = fcl_im_req_pc;
+
+    // Instruction Receive Input
+    assign im_nel_recv_inst_valid     = i_im_recv_inst_valid;
+    assign o_im_recv_inst_get         = im_nel_recv_inst_get;
+    assign im_nel_recv_pc             = i_im_recv_pc;
+
+    // Decoder Info Receive
+    assign dec_nel_decode_exception   = i_nel_decode_exception;
+    assign dec_nel_decode_expath      = i_nel_decode_expath;
+    assign dec_nel_decode_microop     = i_nel_decode_microop;
+    assign dec_nel_decode_rd          = i_nel_decode_rd;
+    assign dec_nel_decode_newreg      = i_nel_decode_newreg;
+    assign dec_nel_decode_rs          = i_nel_decode_rs;
+    assign dec_nel_decode_imm         = i_nel_decode_imm;
+    assign dec_nel_decode_jump        = i_nel_decode_jump;
+    assign dec_nel_decode_jump_reg    = i_nel_decode_jump_reg;
+    assign dec_nel_decode_branch      = i_nel_decode_branch;
+
+    // NEL valid is a transfer pulse, generated only when ALL get bits are high.
+    // Reserve a whole decode bundle without feeding that pulse back into ready.
+    assign nel_ist_new_inst_get = ist_nel_accept & {STRUCT_DECODE_NEW_INST{lsq_order_ready}};
+
+    function automatic int lsq_ex_offset(input int path_index);
+        int offset = 0;
+        for (int p = 0; p < path_index; p++) offset += STRUCT_RS_OUT_ENTRY[p];
+        return offset;
+    endfunction
+
+    generate
+        if (ENABLE_LSQ) begin : G_LSQ
+            localparam int FIRST = lsq_ex_offset(STRUCT_LSQ_EX_PATH);
+            localparam int LANES = STRUCT_RS_OUT_ENTRY[STRUCT_LSQ_EX_PATH];
+            wire [STRUCT_DECODE_NEW_INST-1:0] order_valid;
+            wire [STRUCT_DECODE_NEW_INST*_BITWIDTH_FLOW_WINDOWS_PC-1:0] order_tag;
+            for (genvar d = 0; d < STRUCT_DECODE_NEW_INST; d++) begin : G_ORDER
+                assign order_valid[d] = nel_ist_new_inst_valid[d] && ist_nel_accept[d] &&
+                    (nel_ist_new_inst_data[d*_BITWIDTH_INTERNAL_INST_WIDTH+_BITWIDTH_FLOW_WINDOWS_PC
+                        +: _BITWIDTH_STRUCT_EX_PATH] == _BITWIDTH_STRUCT_EX_PATH'(STRUCT_LSQ_EX_PATH));
+                assign order_tag[d*_BITWIDTH_FLOW_WINDOWS_PC +: _BITWIDTH_FLOW_WINDOWS_PC] =
+                    nel_ist_new_inst_data[d*_BITWIDTH_INTERNAL_INST_WIDTH +: _BITWIDTH_FLOW_WINDOWS_PC];
+            end
+            load_store_queue #(
+                .TAG_WIDTH(_BITWIDTH_FLOW_WINDOWS_PC), .INST_WIDTH(_BITWIDTH_EX_INST_WIDTH),
+                .ORDER_CHANNELS(STRUCT_DECODE_NEW_INST), .READY_CHANNELS(LANES),
+                .DONE_CHANNELS(STRUCT_EX_OUT_RESULT_SUM), .DEPTH(STRUCT_LSQ_ENTRIES)
+            ) U_LSQ (
+                .clk(clk), .reset_n(reset_n),
+                .i_order_valid(order_valid), .i_order_tag(order_tag), .o_order_ready(lsq_order_ready),
+                .i_ready_valid(rs_ex_wait_inst_valid[FIRST +: LANES]),
+                .o_ready_get(rs_ex_wait_inst_get[FIRST +: LANES]),
+                .i_ready_data(rs_ex_wait_inst_data[FIRST*_BITWIDTH_EX_INST_WIDTH +: LANES*_BITWIDTH_EX_INST_WIDTH]),
+                .o_ex_valid(o_rs_entry_valid[FIRST +: LANES]), .i_ex_get(i_rs_entry_get[FIRST +: LANES]),
+                .o_ex_data(o_rs_entry_data[FIRST*_BITWIDTH_EX_INST_WIDTH +: LANES*_BITWIDTH_EX_INST_WIDTH]),
+                .i_done_valid(wbc_fcl_done_pc_valid), .i_done_tag(wbc_fcl_done_pc_data)
+            );
+            for (genvar e = 0; e < STRUCT_EX_CORES; e++) begin : G_BYPASS_OTHER_PATHS
+                if (e < FIRST || e >= FIRST+LANES) begin
+                    assign o_rs_entry_valid[e] = rs_ex_wait_inst_valid[e];
+                    assign rs_ex_wait_inst_get[e] = i_rs_entry_get[e];
+                    assign o_rs_entry_data[e*_BITWIDTH_EX_INST_WIDTH +: _BITWIDTH_EX_INST_WIDTH] =
+                        rs_ex_wait_inst_data[e*_BITWIDTH_EX_INST_WIDTH +: _BITWIDTH_EX_INST_WIDTH];
+                end
+            end
+            initial begin
+                if (STRUCT_LSQ_EX_PATH < 0 || STRUCT_LSQ_EX_PATH >= STRUCT_EX_PATH || LANES < 1)
+                    $fatal(1, "LSQ requires a valid EX path with at least one output");
+            end
+        end else begin : G_NO_LSQ
+            assign lsq_order_ready = 1'b1;
+            assign o_rs_entry_valid = rs_ex_wait_inst_valid;
+            assign rs_ex_wait_inst_get = i_rs_entry_get;
+            assign o_rs_entry_data = rs_ex_wait_inst_data;
+        end
+    endgenerate
+
+    // EX Result Receive (EX Out)
+    assign ex_wbc_result_valid        = i_wbc_result_valid;
+    assign ex_wbc_result_data         = i_wbc_result_data;
+    assign ex_wbc_result_branch_valid = i_wbc_result_branch_valid;
+    assign ex_wbc_result_branch_data  = i_wbc_result_branch_data;
+
+// END   ===[ INPUT, OUTPUT AREA ]===   END //
+
+endmodule

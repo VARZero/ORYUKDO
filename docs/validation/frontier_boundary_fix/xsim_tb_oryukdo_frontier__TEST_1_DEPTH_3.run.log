@@ -1,0 +1,6 @@
+Time resolution is 1 ps
+run -all
+tb_oryukdo_frontier PASS TEST=1 DEPTH=3
+$finish called at time : 206 ns : File "ORYUKDO/gen2/src/TB/tb_oryukdo_frontier.sv" Line 143
+exit
+INFO: [Common 17-206] Exiting xsim at Thu Oct 29 12:39:37 2026...

@@ -1,0 +1,2 @@
+tb_oryukdo_completion_queue PASS delivered=        631 backpressure=         61
+- /mnt/d/work_buffer/eulsukdo/ORYUKDO/gen2/src/TB/tb_oryukdo_completion_queue.sv:81: Verilog $finish

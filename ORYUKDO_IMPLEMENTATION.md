@@ -1,5 +1,9 @@
 # ORYUKDO Gen2 implementation
 
+현재 frontier 경계/XSim 수정과 23개 Verilator·8개 XSim 회귀 결과는
+[2026-10-29 수정 기록](docs/FRONTIER_BOUNDARY_FIX.md)을 참고한다.
+이 문서의 기존 합성·배선 측정값은 해당 기록의 이전 RTL에 대한 결과다.
+
 을숙도 Gen2를 기반으로 분기예측 교체, 정확한 예외 복구, 윈도우 경계
 인터럽트, CPU 내부 Store 전달과 외부 공개 분리를 추가한다.
 기존 `eulsukdo_scheduler`는 비교용으로 보존하고 새 통합 최상위 모듈은

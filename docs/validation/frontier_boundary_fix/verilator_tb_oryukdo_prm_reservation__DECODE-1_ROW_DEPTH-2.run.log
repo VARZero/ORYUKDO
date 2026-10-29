@@ -1,0 +1,2 @@
+tb_oryukdo_prm_reservation PASS D=1 U=1 input=3 row=2 held_plans=1
+- /mnt/d/work_buffer/eulsukdo/ORYUKDO/gen2/src/TB/tb_oryukdo_prm_reservation.sv:172: Verilog $finish

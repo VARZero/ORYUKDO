@@ -1,0 +1,7 @@
+Time resolution is 1 ps
+run -all
+Fatal: Stable token not accepted after allocation
+Time: 20 ns  Iteration: 0  Process: /tb_oryukdo_frontier__TEST_1_DEPTH_4/dut/stable_token  Scope: tb_oryukdo_frontier__TEST_1_DEPTH_4.dut.stable_token  File: ORYUKDO/gen2/src/TB/tb_oryukdo_frontier.sv Line: 122
+$finish called at time : 20 ns
+exit
+INFO: [Common 17-206] Exiting xsim at Thu Oct 29 12:40:38 2026...

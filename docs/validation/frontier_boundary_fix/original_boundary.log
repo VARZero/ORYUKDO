@@ -1,0 +1,7 @@
+Time resolution is 1 ps
+run -all
+Fatal: Younger ordered side effect escaped boundary mode=0
+Time: 65 ns  Iteration: 0  Process: /tb_oryukdo_frontier__TEST_0_DEPTH_4/dut/boundaries/Block64_27/Block78_28  Scope: tb_oryukdo_frontier__TEST_0_DEPTH_4.dut.boundaries.Block64_27.Block78_28  File: ORYUKDO/gen2/src/TB/tb_oryukdo_frontier.sv Line: 82
+$finish called at time : 65 ns
+exit
+INFO: [Common 17-206] Exiting xsim at Thu Oct 29 12:40:23 2026...

@@ -1,0 +1,36 @@
+parallel PC validation preserves contiguous prefix PASS
+multi-lane rename dependency PASS
+local store forwarding and ordered windows PASS
+branch rollback and stale completion PASS
+precise exception prefix PASS
+registered AGU faults, early stop and completion-class isolation PASS
+registered fault after older serial MMIO PASS
+branch recovery discards uncompleted AGU fault PASS
+partial overlapping store forwarding PASS
+serialized CSR and interrupt boundary PASS
+CSR avoids RS head-of-line deadlock PASS
+CSR register result dependency PASS
+MMIO and store bus fault PASS
+decode exception PASS
+same-bank completion burst and duplicate rejection PASS
+parallel duplicate priority, payload and stale-generation isolation PASS
+two-source wake across completion and dispatch edges PASS
+Ready recovery overlap and new lifetime isolation PASS
+registered fault stop and overlapping admission PASS
+parallel completion and partial-window interrupt PASS
+late memory response after recovery PASS
+external-only predictor handshake PASS
+rename recovery, unresolved store and MMIO store PASS
+slot and physical register reuse PASS
+resource-pressure partial window sealing PASS
+decode buffer backpressure, payload isolation and WBC readiness PASS
+flush discards captured unallocated decode PASS
+interrupt between decode capture and allocation PASS
+single RS ownership through WBC and asymmetric EX stalls PASS
+flush kills stalled RS heads and queued entries before slot reuse PASS
+ordered CSR output holds while RS is empty PASS
+PERF mode=0 instructions=32 cycles=91
+PERF mode=1 instructions=32 cycles=555
+nonzero boot PC and idle interrupt PASS
+tb_oryukdo_scheduler PASS
+- /mnt/d/work_buffer/eulsukdo/ORYUKDO/gen2/src/TB/tb_oryukdo_scheduler.sv:807: Verilog $finish

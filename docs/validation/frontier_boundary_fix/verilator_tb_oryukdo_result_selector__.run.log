@@ -1,0 +1,2 @@
+tb_oryukdo_result_selector PASS lanes=5 checks=36864
+- /mnt/d/work_buffer/eulsukdo/ORYUKDO/gen2/src/TB/tb_oryukdo_result_selector.sv:70: Verilog $finish

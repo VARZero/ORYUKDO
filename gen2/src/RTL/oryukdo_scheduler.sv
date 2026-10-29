@@ -92,6 +92,7 @@ module oryukdo_scheduler #(
     localparam int BANKS=2, SOURCE_W=$clog2(RESULTS);
     localparam int READY_W=SLOT_W+PHY_W;
     localparam int CHANNELS=DECODE+ISSUE;
+    wire backend_reset_n;
     // RF writes happen on o_wb_*; internal readiness follows one cycle later.
     // Both NEL and PRM see the same registered pulse, including late waiters.
     logic [BANKS-1:0] wake_valid;
@@ -160,7 +161,7 @@ module oryukdo_scheduler #(
         !(|selected) && !csr_barrier && !fault_pending && !i_interrupt &&
         prediction_ready && i_decode_epoch==epoch;
     wire [DECODE-1:0] ist_get;
-    wire backend_reset_n=reset_n && !o_flush && !initializing;
+    assign backend_reset_n=reset_n && !o_flush && !initializing;
     wire dispatch_fire=backend_reset_n && (&ist_get) && (|dispatch_valid);
     wire [CHANNELS-1:0] ist_valid, rs_get;
     wire [CHANNELS*EX_W-1:0] ist_data;

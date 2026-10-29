@@ -27,6 +27,10 @@ CASES = [
     ('tb_oryukdo_prm_reservation', {}),
     ('tb_oryukdo_prm_reservation', dict(DECODE=3, DEPTH=2, ROW_DEPTH=3)),
     ('tb_oryukdo_prm_reservation', dict(DECODE=1, ROW_DEPTH=2)),
+    ('tb_oryukdo_frontier', dict(TEST=0)),
+    ('tb_oryukdo_frontier', dict(TEST=1)),
+    ('tb_oryukdo_frontier', dict(TEST=0, DEPTH=3)),
+    ('tb_oryukdo_frontier', dict(TEST=1, DEPTH=3)),
 ]
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)

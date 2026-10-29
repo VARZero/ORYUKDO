@@ -11,6 +11,11 @@ EULSUKDO Gen2 `9b0e1c6`을 바탕으로 추측 실행과 복구 기능을 추가
 
 [구현 내용·인터페이스·검증 범위](ORYUKDO_IMPLEMENTATION.md)
 
+2026-10-29: 분기·인터럽트 경계의 후속 CSR/MMIO 실행 허가와 XSim 접수 신호
+갱신을 수정했다. Verilator 23개·XSim 8개 회귀를 통과했으며,
+[수정 원인·재현·검증 기록](docs/FRONTIER_BOUNDARY_FIX.md)에 정리했다.
+아래 70 MHz 수치는 이전 RTL의 기록으로, 이번 수정 후 배치·배선은 재실행하지 않았다.
+
 현재 구현은 `gen2/src/RTL/oryukdo_*.sv`, 기능 검사는 `gen2/src/TB/`에 있다.
 이 저장소의 과거 루트 `RTL/`, `TB/` 구현은 Git 이력에 보존한다.
 기반 을숙도 RTL은 비교·회귀 검증용으로 유지하며, 오륙도의 최상위 모듈은

@@ -1,0 +1,2 @@
+tb_oryukdo_frontier PASS TEST=0 DEPTH=3
+- /mnt/d/work_buffer/eulsukdo/ORYUKDO/gen2/src/TB/tb_oryukdo_frontier.sv:143: Verilog $finish

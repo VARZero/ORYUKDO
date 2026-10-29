@@ -60,6 +60,7 @@ module oryukdo_frontier #(
         logic [CAUSE_W-1:0] cause;
     } entry_t;
     entry_t entries[DEPTH];
+    logic [DEPTH-1:0] valid_bits, done_bits, fault_bits, wrong_bits, last_bits, serial_bits;
     logic [GEN_W-1:0] generations[DEPTH];
     typedef enum logic [1:0] {CHECK, DRAIN, EVENT} state_t;
     typedef enum logic [2:0] {WINDOW, FAULT, BRANCH, SERIAL, INTERRUPT} reason_t;
@@ -115,9 +116,16 @@ module oryukdo_frontier #(
     end
     assign o_allocate_ready=reset_n && !boot_pending && !stopped && !i_interrupt && !i_seal && state!=EVENT &&
                             int'(count)<=DEPTH-LANES;
-    assign o_head_valid=reset_n && count!=0 && !o_flush;
+    // Draining the last older entry does not resolve its boundary. Hold younger
+    // CSR/MMIO side effects until CHECK resumes or the pending event flushes.
+    assign o_head_valid=reset_n && count!=0 && !o_flush &&
+        (state==CHECK || (state==DRAIN && drain_left!=0));
     assign o_head_token={entries[head].generation,head};
-    assign o_serial_accept=reset_n && !o_flush && live(i_serial_token);
+    // Keep array dependencies explicit: XSim 2022.2 can miss changes hidden
+    // inside live() when the input token itself stays constant.
+    assign o_serial_accept=reset_n && !o_flush && int'(i_serial_token[SLOT_W-1:0])<DEPTH &&
+        valid_bits[i_serial_token[SLOT_W-1:0]] &&
+        generations[i_serial_token[SLOT_W-1:0]]==i_serial_token[SLOT_W +: GEN_W];
     assign o_commit_valid=reset_n && state==DRAIN && drain_left!=0;
     assign o_commit_token=o_head_token;
     assign o_commit_store=entries[head].store;
@@ -221,7 +229,6 @@ module oryukdo_frontier #(
         logic control, store, writes;
     } info_t;
     info_t info[DEPTH];
-    logic [DEPTH-1:0] valid_bits, done_bits, fault_bits, wrong_bits, last_bits, serial_bits;
     logic [PC_W-1:0] next_address[DEPTH];
     logic [CAUSE_W-1:0] causes[DEPTH];
     for(genvar row=0;row<DEPTH;row++) begin: G_ROW

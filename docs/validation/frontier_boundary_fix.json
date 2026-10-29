@@ -1,0 +1,374 @@
+{
+  "base_commit": "2918338440252904a53acdcbfea30a6e484bccbc",
+  "date": "2026-10-29",
+  "tools": {
+    "verilator": "5.020",
+    "xsim": "2022.2"
+  },
+  "results": {
+    "verilator": [
+      {
+        "name": "tb_oryukdo_scheduler__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__CUSTOM_LSQ-1",
+        "parameters": {
+          "CUSTOM_LSQ": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__CUSTOM_LSQ-1_EXTERNAL_PREDICTOR-1",
+        "parameters": {
+          "CUSTOM_LSQ": 1,
+          "EXTERNAL_PREDICTOR": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__EXTERNAL_PREDICTOR-1",
+        "parameters": {
+          "EXTERNAL_PREDICTOR": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__DECODE-1_EX_LANES-3_ENTRIES-17_PHY-18_UPDATES-2",
+        "parameters": {
+          "DECODE": 1,
+          "EX_LANES": 3,
+          "ENTRIES": 17,
+          "PHY": 18,
+          "UPDATES": 2
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__DECODE-3_EX_LANES-7_ENTRIES-32_UPDATES-3",
+        "parameters": {
+          "DECODE": 3,
+          "EX_LANES": 7,
+          "ENTRIES": 32,
+          "UPDATES": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__DECODE-1_ENTRIES-17_PHY-18_WINDOW_SIZE-64",
+        "parameters": {
+          "DECODE": 1,
+          "ENTRIES": 17,
+          "PHY": 18,
+          "WINDOW_SIZE": 64
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__ENTRIES-128_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+        "parameters": {
+          "ENTRIES": 128,
+          "PHY": 64,
+          "ARCH": 32,
+          "GEN_W": 32,
+          "EPOCH_W": 32,
+          "RS_DEPTH": 128
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__ENTRIES-64_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+        "parameters": {
+          "ENTRIES": 64,
+          "PHY": 64,
+          "ARCH": 32,
+          "GEN_W": 32,
+          "EPOCH_W": 32,
+          "RS_DEPTH": 128
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_scheduler__ENTRIES-32_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128",
+        "parameters": {
+          "ENTRIES": 32,
+          "PHY": 64,
+          "ARCH": 32,
+          "GEN_W": 32,
+          "EPOCH_W": 32,
+          "RS_DEPTH": 128
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_completion_queue__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_completion_queue__LANES-3_DEPTH-3",
+        "parameters": {
+          "LANES": 3,
+          "DEPTH": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_nel__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_result_selector__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_result_selector__LANES-3",
+        "parameters": {
+          "LANES": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_result_selector__LANES-7",
+        "parameters": {
+          "LANES": 7
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_prm_reservation__",
+        "parameters": {},
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_prm_reservation__DECODE-3_DEPTH-2_ROW_DEPTH-3",
+        "parameters": {
+          "DECODE": 3,
+          "DEPTH": 2,
+          "ROW_DEPTH": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_prm_reservation__DECODE-1_ROW_DEPTH-2",
+        "parameters": {
+          "DECODE": 1,
+          "ROW_DEPTH": 2
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_frontier__TEST-0",
+        "parameters": {
+          "TEST": 0
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_frontier__TEST-1",
+        "parameters": {
+          "TEST": 1
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_frontier__TEST-0_DEPTH-3",
+        "parameters": {
+          "TEST": 0,
+          "DEPTH": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      },
+      {
+        "name": "tb_oryukdo_frontier__TEST-1_DEPTH-3",
+        "parameters": {
+          "TEST": 1,
+          "DEPTH": 3
+        },
+        "passed": true,
+        "build_exit": 0,
+        "run_exit": 0
+      }
+    ],
+    "xsim": [
+      {
+        "name": "tb_oryukdo_frontier__TEST_0_DEPTH_4",
+        "parameters": {
+          "TEST": 0,
+          "DEPTH": 4
+        },
+        "passed": true
+      },
+      {
+        "name": "tb_oryukdo_frontier__TEST_1_DEPTH_4",
+        "parameters": {
+          "TEST": 1,
+          "DEPTH": 4
+        },
+        "passed": true
+      },
+      {
+        "name": "tb_oryukdo_frontier__TEST_0_DEPTH_3",
+        "parameters": {
+          "TEST": 0,
+          "DEPTH": 3
+        },
+        "passed": true
+      },
+      {
+        "name": "tb_oryukdo_frontier__TEST_1_DEPTH_3",
+        "parameters": {
+          "TEST": 1,
+          "DEPTH": 3
+        },
+        "passed": true
+      },
+      {
+        "name": "tb_oryukdo_scheduler__CUSTOM_LSQ_0_EXTERNAL_PREDICTOR_0",
+        "parameters": {
+          "CUSTOM_LSQ": 0,
+          "EXTERNAL_PREDICTOR": 0
+        },
+        "passed": true
+      },
+      {
+        "name": "tb_oryukdo_scheduler__CUSTOM_LSQ_0_EXTERNAL_PREDICTOR_1",
+        "parameters": {
+          "CUSTOM_LSQ": 0,
+          "EXTERNAL_PREDICTOR": 1
+        },
+        "passed": true
+      },
+      {
+        "name": "tb_oryukdo_scheduler__CUSTOM_LSQ_1_EXTERNAL_PREDICTOR_0",
+        "parameters": {
+          "CUSTOM_LSQ": 1,
+          "EXTERNAL_PREDICTOR": 0
+        },
+        "passed": true
+      },
+      {
+        "name": "tb_oryukdo_scheduler__CUSTOM_LSQ_1_EXTERNAL_PREDICTOR_1",
+        "parameters": {
+          "CUSTOM_LSQ": 1,
+          "EXTERNAL_PREDICTOR": 1
+        },
+        "passed": true
+      }
+    ]
+  },
+  "original_failures": {
+    "boundary": "Fatal: Younger ordered side effect escaped boundary mode=0",
+    "token": "Fatal: Stable token not accepted after allocation"
+  },
+  "source_lf_sha256": {
+    "gen2/src/RTL/eulsukdo_scheduler.sv": "e4bf5f84d67fa723b7b6da365184abbf354d93e8e217118466f2996c5d088812",
+    "gen2/src/RTL/flow_control_logic.sv": "e7a623c188d76c9597fdc17c1316349fccd1e8991f8221c2e82e952732529bd0",
+    "gen2/src/RTL/instruction_state_table.sv": "83cd66b6ea723dc3f4971127c6e16314a5575d42956e763bcccebe302718906e",
+    "gen2/src/RTL/load_store_queue.sv": "2f034721275a73c6400af5d1868378e337f17c7cae8f56dd2a8cedf9e16b7a99",
+    "gen2/src/RTL/new_entry_logic.sv": "2bb94854ddb91aa959b72c2ec975a9b9f8d92936a3b5096458eaff350d2a417e",
+    "gen2/src/RTL/oryukdo_completion_queue.sv": "813f525c93282d739998cd61e5d7bbeb15cb8b63c7082731a0b8dc06449fcfa9",
+    "gen2/src/RTL/oryukdo_dependency_mapper.sv": "e513025a525f5eb7a9e66e9325984452da27dfa2711f04382f8f52a0e89a1a12",
+    "gen2/src/RTL/oryukdo_frontier.sv": "b6e971e8d6f211c54d7dc083643e17deaa5088830260e1bc6d11697f2fa633a7",
+    "gen2/src/RTL/oryukdo_memory.sv": "ecbc02825c2d1950b0d309af32eaf06999241c9c4f0efdd94a3ab1b4d1cc3fb0",
+    "gen2/src/RTL/oryukdo_new_entry_logic.sv": "304683edc265b55bda9097eb8818d10b6fd433fb97e70b905abcd36bbc46263f",
+    "gen2/src/RTL/oryukdo_rename.sv": "33a292af238b1fcc2deedd7c1748349127c3cf270afb1c080a87772df45314bc",
+    "gen2/src/RTL/oryukdo_result_selector.sv": "54e485819bfaa985693e9ef94ea13b22c20ad8c8d60cc4c604c90705f151be2d",
+    "gen2/src/RTL/oryukdo_scheduler.sv": "ab32d639ddd49ea9e8a1095c2f5098c8f38bef9e899f751b441819d6776a1c28",
+    "gen2/src/RTL/physical_register_mapper.sv": "87fe77d260d59fc1f6eb1e59195ef304de1bb1dd29861d2f1e385d30e41886e4",
+    "gen2/src/RTL/ready_station.sv": "a8c462dbec8f2c8ab946861e04e9f8b29db2da2809c855670c1ccff457df691e",
+    "gen2/src/RTL/write_back_concatenation.sv": "94ad19cb421904318686796c22500137c8e350f2c5aec83a28a0e34423a27ecd",
+    "gen2/src/RTL/_element_logics.sv": "e8bdd53a08e9130edb263d06a6b27aeabd24d3f7fdfe9e3d4fa36c16efcc595a",
+    "gen2/src/TB/tb_oryukdo_frontier.sv": "48096a4fef6ae4765ed6b6cfd53b299c5dbba6ed6350793e26dbc742c0605409",
+    "gen2/src/TB/tb_oryukdo_scheduler.sv": "1a1947c43aa81ef842850ba37e2ba12d0443110c2e72dbd24f1468cbc0c24ea3",
+    "gen2/src/TB/run_oryukdo.py": "6424f541763f20ef521e8f9e57a29194bd5926930adeb3e338b38c3560550364",
+    "gen2/src/TB/run_oryukdo_xsim.py": "1de53e3a6881e4699cdd629284df28b342b871e459fb4a4a41ee27ac6e528e2f"
+  },
+  "log_lf_sha256": {
+    "docs/validation/frontier_boundary_fix/original_boundary.log": "88c10ce94f9ae8b2bf137bb9dc35cd8ccc85d3621eb907f8dd8c2c29db4acb60",
+    "docs/validation/frontier_boundary_fix/original_token.log": "18ad08b92792fa1c381bcbc4b80e4cb611a1cb423d720a71f35ed7ac02425423",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_completion_queue__.run.log": "e4f1a2a9b32b7e6452b25c673cf4bf264a7fbfaed959ea343876a31a090e8216",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_completion_queue__LANES-3_DEPTH-3.run.log": "11aa5f028c82b31f29597b4f226aac9e71583d338f4ebecd36969c94f37058bf",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_frontier__TEST-0.run.log": "bc5c1c40ec80ec5d5257ee2e282cb449067f5b30422430a6cd43ff20e0afb8fc",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_frontier__TEST-0_DEPTH-3.run.log": "214e2501d1a435f789b51e054e5a64e1547945afa0f7e0267eccee97a90bf0a6",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_frontier__TEST-1.run.log": "5643a8612ba19736f41316ed86e6a5b7429d97634958d2109952d081e954acf3",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_frontier__TEST-1_DEPTH-3.run.log": "09404c5032a7b93c5ac7e0891cc14f9db547b3adfa21d8bcd0d30de2f2c745eb",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_nel__.run.log": "6475990fb2906e81a02513375acd03f7ea8308a85089b390f0c57a18ad302d2e",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_prm_reservation__.run.log": "37b8cbc6a1edcae94754236d6565e38f95e63b2e3f548945969e4562f6d7f35d",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_prm_reservation__DECODE-1_ROW_DEPTH-2.run.log": "e18700daa17416a4bb1d222b216b8e695c4a10b7d6ee9b1033b124b0f1342ad0",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_prm_reservation__DECODE-3_DEPTH-2_ROW_DEPTH-3.run.log": "d149ccc39c4b1cf4960d04fdc0a8287b7e46e4caab1401927eaf1aa0c0429d69",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_result_selector__.run.log": "25050ec84ea67a32f84f742bc6a29328580abcc94245621ade437711ddaaaef4",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_result_selector__LANES-3.run.log": "f6f6efe8a90d8a6790dd8799d3f422d9ab9985580c2f8e37f0745238a14318aa",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_result_selector__LANES-7.run.log": "46c3951ea71cc4ebd8e0f8f81e53ccc039633157a1909571ee7d66348a57541a",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_scheduler__.run.log": "9d5145637e391c618950b0d28855d1dde584db3fe7cbd5de3b68bcbe152d0057",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_scheduler__CUSTOM_LSQ-1.run.log": "cf001b1b852fcbeee7751ede1fd57c214a60b566da71afc274d77d34d8630e0a",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_scheduler__CUSTOM_LSQ-1_EXTERNAL_PREDICTOR-1.run.log": "a37ad81aeaec70131e1a836b8fd62f6640824c5d1d2b7724f732199a7dcf9a21",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_scheduler__DECODE-1_ENTRIES-17_PHY-18_WINDOW_SIZE-64.run.log": "39049cf35ca84a38dbb7d901b0dd9c7e68c14cb7402eff8a6b7a8ffb527f7bbb",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_scheduler__DECODE-1_EX_LANES-3_ENTRIES-17_PHY-18_UPDATES-2.run.log": "827e9a4085197880af0701f859e1d31c77722c97a48891340fad6dc1a8f709ce",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_scheduler__DECODE-3_EX_LANES-7_ENTRIES-32_UPDATES-3.run.log": "9d5145637e391c618950b0d28855d1dde584db3fe7cbd5de3b68bcbe152d0057",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_scheduler__ENTRIES-128_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128.run.log": "4149590070449a44639726432b3f972c460bc112d15a98bcddb536b0f9f80cb7",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_scheduler__ENTRIES-32_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128.run.log": "9d5145637e391c618950b0d28855d1dde584db3fe7cbd5de3b68bcbe152d0057",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_scheduler__ENTRIES-64_PHY-64_ARCH-32_GEN_W-32_EPOCH_W-32_RS_DEPTH-128.run.log": "4149590070449a44639726432b3f972c460bc112d15a98bcddb536b0f9f80cb7",
+    "docs/validation/frontier_boundary_fix/verilator_tb_oryukdo_scheduler__EXTERNAL_PREDICTOR-1.run.log": "172fee9ed8f62138ad4ef58a02750d2b7778b1c26d8482d8680384e40405cab6",
+    "docs/validation/frontier_boundary_fix/xsim_tb_oryukdo_frontier__TEST_0_DEPTH_3.run.log": "02d10a0fb4611339e1c654bcca9e17be68853122b6c131d45c02a58805ee7c08",
+    "docs/validation/frontier_boundary_fix/xsim_tb_oryukdo_frontier__TEST_0_DEPTH_4.run.log": "f173a59fe5fab127cf9fba5835bfa7dee995e4a0c5630d83f79f3be7befd1ce8",
+    "docs/validation/frontier_boundary_fix/xsim_tb_oryukdo_frontier__TEST_1_DEPTH_3.run.log": "5cd05e3b49f8d05c9e5b073703b50d01a08829d85d050db2ff7ffd415a67aaa6",
+    "docs/validation/frontier_boundary_fix/xsim_tb_oryukdo_frontier__TEST_1_DEPTH_4.run.log": "8965e8ef1bd66af57f5004c95c568d0395cbf300658f7dc6306f5ab751d0a0bd",
+    "docs/validation/frontier_boundary_fix/xsim_tb_oryukdo_scheduler__CUSTOM_LSQ_0_EXTERNAL_PREDICTOR_0.run.log": "34f20984578fdd0afc61b188eb461f5f5ca41419edc7bfe4b456cea63f7dd7d3",
+    "docs/validation/frontier_boundary_fix/xsim_tb_oryukdo_scheduler__CUSTOM_LSQ_0_EXTERNAL_PREDICTOR_1.run.log": "b8f4351b833a705b50a106cc410080660680fac6db9b503dc67daf2e3536ac00",
+    "docs/validation/frontier_boundary_fix/xsim_tb_oryukdo_scheduler__CUSTOM_LSQ_1_EXTERNAL_PREDICTOR_0.run.log": "7ad0e7f96d9d70c20745688fd88274648773cc4a2a1d582fb81527468f0b12c0",
+    "docs/validation/frontier_boundary_fix/xsim_tb_oryukdo_scheduler__CUSTOM_LSQ_1_EXTERNAL_PREDICTOR_1.run.log": "fd3accff7d63747df97fe6bff20720becfebc974375039d7e867e073d9763dde"
+  },
+  "limits": [
+    "No FPGA synthesis or placement/routing rerun",
+    "No physical board test",
+    "Public scheduler interfaces unchanged"
+  ]
+}
